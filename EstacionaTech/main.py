@@ -1,18 +1,20 @@
 from database.database import adicionar_usuario, criar_tabelas, verificar_login
 
+
 def menu_operador():
     print("\nMenu do Operador:")
     print("1. Visualizar Estacionamento")
     print("2. Registrar Entrada de Veículo")
     print("3. Registrar Saída de Veículo")
-    print("4.  Sair saindo")
+    print("4. Sair")
+
 
 def menu_administrativo():
     print("\nMenu do Administrador:")
     print("1. Visualizar Estacionamento")
     print("2. Registrar Entrada de Veículo")
     print("3. Registrar Saída de Veículo")
-    print("4. Adicionar Usuário adicopna sjshaiksbjda ")  # Nova opção para adicionar um usuário
+    print("4. Adicionar Usuário")  # Nova opção para adicionar um usuário
     print("5. Sair")
 
     opcao = input("\nEscolha uma opção: ")
@@ -59,10 +61,10 @@ def main():
 
     usuario = verificar_login(email, senha)
     if usuario:
-        print(f"\nLogin bem-sucedido! Bem-vindo ao Estaciona Tech, {usuario[1]} ({usuario[2]})")
+        print(f"\nLogin bem-sucedido! Bem-vindo, {usuario[1]} ({usuario[2]})")
         iniciar_sistema(usuario)
     else:
-        print("Credenciais inválidas. Tente novamente por favor.")
+        print("Credenciais inválidas. Tente novamente.")
 
 if __name__ == "__main__":
     main()
