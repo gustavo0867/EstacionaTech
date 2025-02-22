@@ -1,13 +1,11 @@
 from database.database import adicionar_usuario, criar_tabelas, verificar_login
 
-
 def menu_operador():
     print("\nMenu do Operador:")
     print("1. Visualizar Estacionamento")
     print("2. Registrar Entrada de Veículo")
     print("3. Registrar Saída de Veículo")
     print("4. Sair")
-
 
 def menu_administrativo():
     print("\nMenu do Administrador:")
