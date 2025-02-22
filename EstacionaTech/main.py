@@ -59,7 +59,7 @@ def main():
 
     usuario = verificar_login(email, senha)
     if usuario:
-        print(f"\nLogin bem-sucedido! Bem-vindo, {usuario[1]} ({usuario[2]})")
+        print(f"\nLogin bem-sucedido! Bem-vindo ao Estaciona Tech, {usuario[1]} ({usuario[2]})")
         iniciar_sistema(usuario)
     else:
         print("Credenciais inválidas. Tente novamente por favor.")
