@@ -62,7 +62,7 @@ def main():
         print(f"\nLogin bem-sucedido! Bem-vindo, {usuario[1]} ({usuario[2]})")
         iniciar_sistema(usuario)
     else:
-        print("Credenciais inválidas. Tente novamente.")
+        print("Credenciais inválidas. Tente novamente por favor.")
 
 if __name__ == "__main__":
     main()
