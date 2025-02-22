@@ -12,7 +12,7 @@ def menu_administrativo():
     print("1. Visualizar Estacionamento")
     print("2. Registrar Entrada de Veículo")
     print("3. Registrar Saída de Veículo")
-    print("4. Adicionar Usuário")  # Nova opção para adicionar um usuário
+    print("4. Adicionar Usuário adicopna sjshaiksbjda ")  # Nova opção para adicionar um usuário
     print("5. Sair")
 
     opcao = input("\nEscolha uma opção: ")
