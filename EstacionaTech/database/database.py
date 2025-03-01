@@ -12,10 +12,17 @@ def criar_tabelas():
     cursor.executescript("""
     CREATE TABLE IF NOT EXISTS Vaga (
         id_vaga INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_mapa INTEGER NOT NULL,
         tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'deficiente', 'etc.')),
-        status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção')),
-        FOREIGN KEY (id_mapa) REFERENCES Layout(id_layout)
+        status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção'))
+    );
+    
+    CREATE TABLE IF NOT EXISTS Estacionamento (
+        id_estacionamento INTEGER PRIMARY KEY AUTOINCREMENT,
+	    nome TEXT NOT NULL,
+        endereço TEXT NOT NULL,
+        capacidade_total INTEGER NOT NULL,
+        cnpj TEXT NOT NULL,
+        status TEXT NOT NULL CHECK (status IN ('ativo', 'inativo', 'manutenção'))
     );
 
     CREATE TABLE IF NOT EXISTS Veiculo (
@@ -25,50 +32,51 @@ def criar_tabelas():
         cor TEXT NOT NULL,
         ano_fabricacao INTEGER NOT NULL,
         id_cliente TEXT NOT NULL,
-        FOREIGN KEY (id_cliente) REFERENCES Cliente(cpf)
+        FOREIGN KEY (id_cliente) REFERENCES Cliente(id_cliente)
     );
 
     CREATE TABLE IF NOT EXISTS Locacao (
         id_locacao INTEGER PRIMARY KEY AUTOINCREMENT,
         id_vaga INTEGER NOT NULL,
         id_veiculo TEXT NOT NULL,
+        id_operador TEXT NOT NULL,
         data_hora_entrada DATETIME NOT NULL,
         data_hora_saida DATETIME,
-        id_operador INTEGER NOT NULL,
         FOREIGN KEY (id_vaga) REFERENCES Vaga(id_vaga),
         FOREIGN KEY (id_veiculo) REFERENCES Veiculo(placa),
-        FOREIGN KEY (id_operador) REFERENCES Operador(id_operador)
-    );
-
-    CREATE TABLE IF NOT EXISTS Layout (
-        id_layout INTEGER PRIMARY KEY AUTOINCREMENT,
-        n_vagas INTEGER NOT NULL,
-        visao BLOB NOT NULL
+        FOREIGN KEY (id_operador) REFERENCES Usuario(id_usuario)
     );
 
     CREATE TABLE IF NOT EXISTS Usuario (
-        id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_usuario TEXT PRIMARY KEY,##EX:admin: adm_1, operador: op_1
+        cpf_usuario TEXT NOT NULL,
         nome TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL,
         senha TEXT NOT NULL,
         tipo TEXT NOT NULL CHECK (tipo IN ('administrador', 'operador')),
-        UNIQUE(email)
+        data_ingresso DATETIME NOT NULL
+        data_saida DATETIME
     );
 
     CREATE TABLE IF NOT EXISTS Cliente (
-        cpf TEXT PRIMARY KEY,
+        id_cliente INTEGER PRIMARY KEY AUTOINCREMENT
+        cpf TEXT,
         nome TEXT NOT NULL,
         telefone TEXT NOT NULL,
-        mensalista BOOLEAN NOT NULL
+        email TEXT NOT NULL,
+        mensalista BOOLEAN NOT NULL,
+        modalidade TEXT NOT NULL CHECK (tipo IN ('casual', 'mensalista', 'pcd', 'idoso'))
     );
 
     CREATE TABLE IF NOT EXISTS Pagamento (
         id_pagamento INTEGER PRIMARY KEY AUTOINCREMENT,
         id_locacao INTEGER NOT NULL,
+        id_operador TEXT NOT NULL,
         valor REAL NOT NULL,
         data_pagamento DATETIME NOT NULL,
         forma_pagamento TEXT NOT NULL CHECK (forma_pagamento IN ('dinheiro', 'cartão', 'etc.')),
-        FOREIGN KEY (id_locacao) REFERENCES Locacao(id_locacao)
+        FOREIGN KEY (id_locacao) REFERENCES Locacao(id_locacao),
+        FOREIGN KEY (id_operador) REFERENCES Usuario(id_usuario)
     );
     """)
 
