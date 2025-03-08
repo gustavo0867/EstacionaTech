@@ -55,18 +55,18 @@ def criar_tabelas():
     );
 
     CREATE TABLE IF NOT EXISTS Usuario (
-        id_usuario TEXT PRIMARY KEY,##EX:admin: adm_1, operador: op_1
+        id_usuario TEXT PRIMARY KEY,
         cpf_usuario TEXT NOT NULL,
         nome TEXT NOT NULL,
         email TEXT NOT NULL,
         senha TEXT NOT NULL,
         tipo TEXT NOT NULL CHECK (tipo IN ('administrador', 'operador')),
-        data_ingresso DATETIME NOT NULL
+        data_ingresso DATETIME NOT NULL,
         data_saida DATETIME
     );
 
     CREATE TABLE IF NOT EXISTS Cliente (
-        id_cliente INTEGER PRIMARY KEY AUTOINCREMENT
+        id_cliente INTEGER PRIMARY KEY AUTOINCREMENT,
         cpf TEXT,
         nome TEXT NOT NULL,
         telefone TEXT NOT NULL,
