@@ -10,12 +10,6 @@ def criar_tabelas():
     cursor = conexao.cursor()
 
     cursor.executescript("""
-    CREATE TABLE IF NOT EXISTS Vaga (
-        id_vaga INTEGER PRIMARY KEY AUTOINCREMENT,
-        tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'deficiente', 'etc.')),
-        status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção'))
-    );
-    
     CREATE TABLE IF NOT EXISTS Estacionamento (
         id_estacionamento INTEGER PRIMARY KEY AUTOINCREMENT,
 	    nome TEXT NOT NULL,
@@ -23,6 +17,19 @@ def criar_tabelas():
         capacidade_total INTEGER NOT NULL,
         cnpj TEXT NOT NULL,
         status TEXT NOT NULL CHECK (status IN ('ativo', 'inativo', 'manutenção'))
+    );
+    
+    CREATE TABLE IF NOT EXISTS Setor (
+        id_setor TEXT PRIMARY KEY,
+        n_vagas INTEGER NOT NULL
+    );
+    
+    CREATE TABLE IF NOT EXISTS Vaga (
+        id_vaga TEXT PRIMARY KEY,
+        setor TEXT NOT NULL,
+        tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'deficiente', 'etc.')),
+        status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção')),
+        FOREIGN KEY (setor) REFERENCES Setor(id_setor)
     );
 
     CREATE TABLE IF NOT EXISTS Veiculo (
