@@ -1,9 +1,22 @@
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+import datetime
 
 
 def conectar():
     return sqlite3.connect("estacionatech.db")
 
+def verificar_login(email, senha):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM Usuario WHERE email = ?", (email,))
+    usuario = cursor.fetchone()
+    conn.close()
+
+    if usuario and check_password_hash(usuario[4], senha):
+        return usuario
+    return None
 
 def criar_tabelas():
     conexao = conectar()
@@ -30,7 +43,7 @@ def criar_tabelas():
         tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'deficiente', 'etc.')),
         status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção')),
         FOREIGN KEY (setor) REFERENCES Setor(id_setor)
-    );
+);
 
     CREATE TABLE IF NOT EXISTS Veiculo (
         placa TEXT PRIMARY KEY,
@@ -72,8 +85,8 @@ def criar_tabelas():
         telefone TEXT NOT NULL,
         email TEXT NOT NULL,
         mensalista BOOLEAN NOT NULL,
-        modalidade TEXT NOT NULL CHECK (tipo IN ('casual', 'mensalista', 'pcd', 'idoso'))
-    );
+        modalidade TEXT NOT NULL CHECK (modalidade IN ('casual', 'mensalista', 'pcd', 'idoso'))
+);
 
     CREATE TABLE IF NOT EXISTS Pagamento (
         id_pagamento INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,13 +100,22 @@ def criar_tabelas():
     );
     """)
 
-    # Verificando se o usuário master já existe, caso contrário, criando-o
     cursor.execute("SELECT * FROM Usuario WHERE email = 'master@admin.com'")
     if not cursor.fetchone():
+        hashed_password = generate_password_hash('admin123')
         cursor.execute("""
-        INSERT INTO Usuario (nome, email, senha, tipo)
-        VALUES (?, ?, ?, ?)
-        """, ('Administrador Master', 'master@admin.com', 'admin123', 'administrador'))
+        INSERT INTO Usuario (id_usuario, cpf_usuario, nome, email, senha, tipo, data_ingresso)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            'master_001',
+            '00000000000',
+            'Administrador Master',
+            'master@admin.com',
+            hashed_password,
+            'administrador',
+            datetime.datetime.now()
+
+        ))
 
     conexao.commit()
     conexao.close()
@@ -113,21 +135,3 @@ def adicionar_usuario(nome, email, senha, tipo):
     conn.commit()
     conn.close()
 
-
-def verificar_login(email, senha):
-    conn = conectar()
-    cursor = conn.cursor()
-
-    # Verificar se o usuário existe com o email fornecido e se a senha confere
-    cursor.execute("""
-    SELECT * FROM Usuario WHERE email = ? AND senha = ?
-    """, (email, senha))
-
-    # Se houver um resultado, retorna o usuário, senão, retorna None
-    usuario = cursor.fetchone()
-    conn.close()
-
-    if usuario:
-        return usuario  # Retorna os dados do usuário (tupla)
-    else:
-        return None  # Se não encontrar, retorna None
