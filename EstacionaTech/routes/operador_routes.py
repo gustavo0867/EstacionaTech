@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 
-operador_bp = Blueprint('operador', __name__)
+#operador_bp = Blueprint('operador', __name__)
+operador_bp = Blueprint('operador', __name__, template_folder='../templates')
+
 
 @operador_bp.route('/painel_operador')
 def painel_operador():

@@ -2,12 +2,12 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from EstacionaTech.database.database import verificar_login  # Certifique-se de que está no caminho correto.
 
 # Criando o Blueprint com o mesmo nome que será usado na referência 'auth'
-auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+#auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, template_folder='../templates')
 
 @auth_bp.route('/')
 def index():
     return redirect(url_for('auth.login'))
-
 
 
 
@@ -21,23 +21,20 @@ def login():
 
         if usuario:
             session['usuario_id'] = usuario[0]
-            session['usuario_email'] = usuario[1]  # Exemplo de salvar email na sessão
-            session['usuario_tipo'] = usuario[2]  # Supondo que o tipo do usuário está na posição 2 da tupla
+            session['nome'] = usuario[2]
+            session['tipo'] = usuario[5]
 
-            flash('Login realizado com sucesso!', 'success')
-
-            if session['usuario_tipo'] == 'administrador':
-                return redirect(url_for('admin.painel'))
-            elif session['usuario_tipo'] == 'operador':
-                return redirect(url_for('operador.painel'))
+            if usuario[5] == 'administrador':
+                return redirect(url_for('admin.painel_admin'))
             else:
-                return redirect(url_for('auth.login'))
+                return redirect(url_for('operador.painel_operador'))
         else:
-            flash("Email ou senha incorretos!", "danger")
-            return render_template("login.html")  # Verifique se o caminho está correto
+            flash('Email ou senha inválidos!', 'error')
+
+    return render_template('login.html')
+
 
 @auth_bp.route('/logout')
 def logout():
     session.clear()
-    flash("Você saiu da conta!", "success")
     return redirect(url_for('auth.login'))
