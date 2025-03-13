@@ -97,7 +97,8 @@ class Administrador(Usuario):
 
     def criar_setor(self, id_setor, n_vagas):
         """Cria um novo setor"""
-        Setor.inserir_setor(id_setor, n_vagas)
+        setor = Setor(id_setor, n_vagas)
+        setor.inserir_setor()
         # self.cursor.execute("INSERT INTO setor (id_setor, n_vagas) VALUES (?, ?)", (id_setor, n_vagas))
         # self.conn.commit()
         # print(f"Setor {id_setor} criado com {n_vagas} vagas.")
@@ -119,7 +120,9 @@ class Administrador(Usuario):
 
     def criar_vaga(self, id_vaga, setor, tipo, status):
         """Cria uma nova vaga"""
-        Vaga.inserir_vaga(id_vaga, setor, tipo, status)
+
+        vaga = Vaga(id_vaga, setor, tipo, status)
+        vaga.inserir_vaga()
 
         # self.cursor.execute("INSERT INTO vaga (id_vaga, setor, tipo, status) VALUES (?, ?, ?, 'livre')",
         #                     (id_vaga, setor, tipo))
@@ -134,6 +137,7 @@ class Administrador(Usuario):
         self.cursor.execute("UPDATE vaga SET status = ? WHERE id_vaga = ?", (status, id_vaga))
         self.conn.commit()
         print(f"Vaga {id_vaga} atualizada para o status {status}.")
+
 
 # Exemplo de uso
 # if __name__ == "__main__":

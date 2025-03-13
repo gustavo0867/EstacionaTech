@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EstacionaTech - Painel Administrativo</title>
+    <title>Configurações do Estacionamento - EstacionaTech</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
 </head>
 <body>
@@ -18,20 +18,23 @@
             </nav>
         </header>
         <main class="dashboard-content container">
-            <h2>Painel Administrativo</h2>
+            <h2>Configurações do estacionamento</h2>
             <div class="dashboard-grid">
                 <div class="dashboard-card">
-                    <h3>Gestão de Usuários</h3>
-                    <p>Gerencie operadores e administradores do sistema</p>
+                    <h3>Setores</h3>
+                    <p>Gerencie os setores do estacionamento.</p>
+                    <a href="{{ url_for('config_setores') }}" class="btn btn-primary">Acessar</a>
                 </div>
                 <div class="dashboard-card">
-                    <h3>Relatórios</h3>
-                    <p>Visualize relatórios de ocupação e faturamento</p>
+                    <h3>Vagas</h3>
+                    <p>Adicione, remova ou altere o status de disponibilidade das vagas.</p>
+                    <a href="{{ url_for('config_vagas') }}" class="btn btn-primary">Acessar</a>
                 </div>
-                <a href="{{url_for('configuracoes_admin')}}" class="dashboard-card">
-                    <h3>Configurações</h3>
-                    <p>Configure parâmetros do estacionamento</p>
-                </a>
+                <div class="dashboard-card">
+                    <h3>Tarifas</h3>
+                    <p>Defina os valores por hora e tarifas especiais para cada tipo de vaga.</p>
+                    <a href="{{ url_for('config_tarifas') }}" class="btn btn-primary">Acessar</a>
+                </div>
             </div>
         </main>
     </div>

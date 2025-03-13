@@ -52,6 +52,20 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+@app.route('/configuracoes_admin')
+def configuracoes_admin():
+    return render_template('configuracoes_admin.html')
+
+@app.route('/config_setores')
+def config_setores():
+    return render_template('config_setores.html')
+@app.route('/config_vagas')
+def config_vagas():
+    return render_template('config_vagas.html')
+
+@app.route('/config_tarifas')
+def config_tarifas():
+    return render_template('config_tarifas.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
