@@ -1,11 +1,17 @@
+import os
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 
-
+# Função para conectar ao banco de dados
 def conectar():
-    return sqlite3.connect("estacionatech.db")
+    diretorio_db = "EstacionaTech/database"
+    if not os.path.exists(diretorio_db):
+        os.makedirs(diretorio_db)  # Criar diretório caso não exista
+    
+    return sqlite3.connect(f"{diretorio_db}/estacionatech.db")
 
+# Função para verificar o login
 def verificar_login(email, senha):
     conn = conectar()
     cursor = conn.cursor()
@@ -18,14 +24,16 @@ def verificar_login(email, senha):
         return usuario
     return None
 
+# Função para criar as tabelas e dados iniciais no banco
 def criar_tabelas():
     conexao = conectar()
     cursor = conexao.cursor()
 
+    # Criação das tabelas principais
     cursor.executescript("""
     CREATE TABLE IF NOT EXISTS Estacionamento (
         id_estacionamento INTEGER PRIMARY KEY AUTOINCREMENT,
-	    nome TEXT NOT NULL,
+        nome TEXT NOT NULL,
         endereço TEXT NOT NULL,
         capacidade_total INTEGER NOT NULL,
         cnpj TEXT NOT NULL,
@@ -43,7 +51,7 @@ def criar_tabelas():
         tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'deficiente', 'etc.')),
         status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção')),
         FOREIGN KEY (setor) REFERENCES Setor(id_setor)
-);
+    );
 
     CREATE TABLE IF NOT EXISTS Veiculo (
         placa TEXT PRIMARY KEY,
@@ -57,7 +65,7 @@ def criar_tabelas():
 
     CREATE TABLE IF NOT EXISTS Locacao (
         id_locacao INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_vaga INTEGER NOT NULL,
+        id_vaga TEXT NOT NULL,
         id_veiculo TEXT NOT NULL,
         id_operador TEXT NOT NULL,
         data_hora_entrada DATETIME NOT NULL,
@@ -86,7 +94,7 @@ def criar_tabelas():
         email TEXT NOT NULL,
         mensalista BOOLEAN NOT NULL,
         modalidade TEXT NOT NULL CHECK (modalidade IN ('casual', 'mensalista', 'pcd', 'idoso'))
-);
+    );
 
     CREATE TABLE IF NOT EXISTS Pagamento (
         id_pagamento INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -98,8 +106,25 @@ def criar_tabelas():
         FOREIGN KEY (id_locacao) REFERENCES Locacao(id_locacao),
         FOREIGN KEY (id_operador) REFERENCES Usuario(id_usuario)
     );
+
+    -- Criando a tabela Tarifa
+    CREATE TABLE IF NOT EXISTS Tarifa (
+        id_tarifa INTEGER PRIMARY KEY AUTOINCREMENT,
+        valor_por_hora REAL NOT NULL,
+        tempo_tolerancia INTEGER NOT NULL
+    );
     """)
 
+    # Verifica se a tarifa já está cadastrada
+    cursor.execute("SELECT * FROM Tarifa")
+    if not cursor.fetchone():
+        # Inserir valores padrão para tarifa
+        cursor.execute("""
+        INSERT INTO Tarifa (valor_por_hora, tempo_tolerancia)
+        VALUES (?, ?)
+        """, (5.00, 15))  # Exemplo: valor R$ 5,00 por hora e 15 minutos de tolerância
+
+    # Verifica se o usuário master já existe
     cursor.execute("SELECT * FROM Usuario WHERE email = 'master@admin.com'")
     if not cursor.fetchone():
         hashed_password = generate_password_hash('admin123')
@@ -114,20 +139,15 @@ def criar_tabelas():
             hashed_password,
             'administrador',
             datetime.datetime.now()
-
         ))
-
-    #cursor.execute("INSERT INTO Setor(id_setor, n_vagas) VALUES ('A', 10)")
 
     conexao.commit()
     conexao.close()
 
-
-# Executa a criação das tabelas ao iniciar o sistema
+# Executa a criação das tabelas e dados iniciais
 criar_tabelas()
 
-
-# ** alterar para a função inserir_usuario de model/usuario **
+# Função para adicionar um usuário ao banco
 def adicionar_usuario(nome, email, senha, tipo):
     conn = conectar()
     cursor = conn.cursor()
@@ -137,4 +157,3 @@ def adicionar_usuario(nome, email, senha, tipo):
     """, (nome, email, senha, tipo))
     conn.commit()
     conn.close()
-
