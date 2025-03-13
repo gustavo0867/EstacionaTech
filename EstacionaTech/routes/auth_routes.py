@@ -4,6 +4,14 @@ from EstacionaTech.database.database import verificar_login  # Certifique-se de 
 # Criando o Blueprint com o mesmo nome que será usado na referência 'auth'
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+@auth_bp.route('/')
+def index():
+    return redirect(url_for('auth.login'))
+
+
+
+
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
