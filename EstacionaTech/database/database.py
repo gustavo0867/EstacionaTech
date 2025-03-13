@@ -125,6 +125,7 @@ def criar_tabelas():
 criar_tabelas()
 
 
+# ** alterar para a função inserir_usuario de model/usuario **
 def adicionar_usuario(nome, email, senha, tipo):
     conn = conectar()
     cursor = conn.cursor()
