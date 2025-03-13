@@ -1,21 +1,31 @@
 import sqlite3
 from datetime import datetime
+from setor import Setor
+from vaga import Vaga
 
 class Usuario:
-    def __init__(self, db_path="estacionatech.db"):
+    def __init__(self, id_usuario, cpf, nome, email, senha, tipo, db_path="estacionatech.db"):
+        self.id_usuario = id_usuario
+        self.cpf = cpf
+        self.nome = nome
+        self.email = email
+        self.senha = senha
+        self.tipo = tipo  # 'administrador' ou 'operador'
+        self.data_ingresso = datetime.now()
+        self.db_path = db_path
         self.conn = sqlite3.connect(db_path)
         self.cursor = self.conn.cursor()
-        self.criar_tabela()
+        #self.criar_tabela()
 
-    def inserir_usuario(self, id_usuario, cpf, nome, email, senha, tipo, data_ingresso, data_saida=None):
+    def inserir_usuario(self):
         """Insere um novo usuário no banco"""
         try:
             self.cursor.execute('''
                 INSERT INTO usuario (id_usuario, cpf_usuario, nome, email, senha, tipo, data_ingresso, data_saida)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (id_usuario, cpf, nome, email, senha, tipo, data_ingresso, data_saida))
+            ''', (self.id_usuario, self.cpf, self.nome, self.email, self.senha, self.tipo, self.data_ingresso, self.data_saida))
             self.conn.commit()
-            print("Usuário cadastrado com sucesso.")
+            print(f"Usuário {self.nome}({self.tipo}) cadastrado com sucesso.")
         except sqlite3.Error as e:
             print(f"Erro ao inserir usuário: {e}")
 
@@ -73,8 +83,57 @@ class Usuario:
         """Fecha a conexão com o banco"""
         self.conn.close()
 
+# ================================
+# Subclasse Administrador (Herança)
+# ================================
+class Administrador(Usuario):
+    def __init__(self, id_usuario, cpf, nome, email, senha, db_path="estacionatech.db"):
+        super().__init__(id_usuario, cpf, nome, email, senha, "administrador", db_path)
 
+    def criar_operador(self, id_operador, cpf, nome, email, senha):
+        """Cria um novo operador"""
+        operador = Usuario(id_operador, cpf, nome, email, senha, "operador", self.db_path)
+        operador.inserir_usuario()
 
+    def criar_setor(self, id_setor, n_vagas):
+        """Cria um novo setor"""
+        Setor.inserir_setor(id_setor, n_vagas)
+        # self.cursor.execute("INSERT INTO setor (id_setor, n_vagas) VALUES (?, ?)", (id_setor, n_vagas))
+        # self.conn.commit()
+        # print(f"Setor {id_setor} criado com {n_vagas} vagas.")
+
+    def listar_setores(self):
+        """Lista todos os setores"""
+        Setor.listar_setores()
+
+        # self.cursor.execute("SELECT * FROM setor")
+        # return self.cursor.fetchall()
+
+    def remover_setor(self, id_setor):
+        """Remove um setor"""
+        Setor.remover_setor(id_setor)
+
+        # self.cursor.execute("DELETE FROM setor WHERE id_setor = ?", (id_setor,))
+        # self.conn.commit()
+        # print(f"Setor {id_setor} removido com sucesso.")
+
+    def criar_vaga(self, id_vaga, setor, tipo, status):
+        """Cria uma nova vaga"""
+        Vaga.inserir_vaga(id_vaga, setor, tipo, status)
+
+        # self.cursor.execute("INSERT INTO vaga (id_vaga, setor, tipo, status) VALUES (?, ?, ?, 'livre')",
+        #                     (id_vaga, setor, tipo))
+        # self.conn.commit()
+        # print(f"Vaga {id_vaga} do tipo {tipo} criada no setor {setor}.")
+
+    def alterar_status_vaga(self, id_vaga, status):
+        """Altera o status de uma vaga para 'manutenção' ou 'livre'"""
+        if status not in ("manutenção", "livre"):
+            raise ValueError("O administrador só pode alterar para 'manutenção' ou 'livre'.")
+
+        self.cursor.execute("UPDATE vaga SET status = ? WHERE id_vaga = ?", (status, id_vaga))
+        self.conn.commit()
+        print(f"Vaga {id_vaga} atualizada para o status {status}.")
 
 # Exemplo de uso
 # if __name__ == "__main__":
