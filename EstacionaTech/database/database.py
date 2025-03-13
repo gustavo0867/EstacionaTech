@@ -117,6 +117,8 @@ def criar_tabelas():
 
         ))
 
+    #cursor.execute("INSERT INTO Setor(id_setor, n_vagas) VALUES ('A', 10)")
+
     conexao.commit()
     conexao.close()
 
