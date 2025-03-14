@@ -13,7 +13,7 @@
                 <h1 class="dashboard-title">EstacionaTech</h1>
                 <div class="dashboard-user">
                     <span>Bem-vindo, {{ nome }}</span>
-                    <a href="{{ url_for('logout') }}" class="btn btn-primary">Sair</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
                 </div>
             </nav>
         </header>
@@ -23,17 +23,17 @@
                 <div class="dashboard-card">
                     <h3>Setores</h3>
                     <p>Gerencie os setores do estacionamento.</p>
-                    <a href="{{ url_for('config_setores') }}" class="btn btn-primary">Acessar</a>
+                    <a href="{{ url_for('configadm.config_setores') }}" class="btn btn-primary">Acessar</a>
                 </div>
                 <div class="dashboard-card">
                     <h3>Vagas</h3>
                     <p>Adicione, remova ou altere o status de disponibilidade das vagas.</p>
-                    <a href="{{ url_for('config_vagas') }}" class="btn btn-primary">Acessar</a>
+                    <a href="{{ url_for('configadm.config_vagas') }}" class="btn btn-primary">Acessar</a>
                 </div>
                 <div class="dashboard-card">
                     <h3>Tarifas</h3>
                     <p>Defina os valores por hora e tarifas especiais para cada tipo de vaga.</p>
-                    <a href="{{ url_for('config_tarifas') }}" class="btn btn-primary">Acessar</a>
+                    <a href="{{ url_for('configadm.config_tarifas') }}" class="btn btn-primary">Acessar</a>
                 </div>
             </div>
         </main>

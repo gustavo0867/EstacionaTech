@@ -1,71 +1,42 @@
+from flask import Flask
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from database.database import verificar_login
+from EstacionaTech.database.database import verificar_login
 from werkzeug.security import generate_password_hash
 
-app = Flask(__name__)
+# Importando os Blueprints
+from EstacionaTech.routes.auth_routes import auth_bp
+from EstacionaTech.routes.admin_routes import admin_bp
+from EstacionaTech.routes.operador_routes import operador_bp
+from EstacionaTech.routes.configadm_routes import configadm_bp
+from EstacionaTech.routes.tarifa_routes import tarifa_bp
+from EstacionaTech.routes.setor_routes import setor_bp
+from EstacionaTech.routes.vaga_routes import vaga_bp
+
+
+app = Flask(__name__, static_folder='EstacionaTech/static', template_folder='EstacionaTech/templates')
+
+#app = Flask(__name__)
 app.secret_key = 'chave_secreta_super_segura'
 
 
+    # Definindo rota principal
 @app.route('/')
-def index():
-    return redirect(url_for('login'))
+def home():
+    return redirect(url_for('auth.login'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        senha = request.form['senha']
-        usuario = verificar_login(email, senha)
-
-        if usuario:
-            session['usuario_id'] = usuario[0]
-            session['nome'] = usuario[2]
-            session['tipo'] = usuario[5]
-
-            if usuario[5] == 'administrador':
-                return redirect(url_for('painel_admin'))
-            else:
-                return redirect(url_for('painel_operador'))
-        else:
-            flash('Email ou senha inválidos!', 'error')
-
-    return render_template('login.html')
+app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(admin_bp, url_prefix='/admin')
+app.register_blueprint(operador_bp, url_prefix='/operador')
+app.register_blueprint(configadm_bp, url_prefix='/configadm')
+app.register_blueprint(tarifa_bp, url_prefix='/tarifa')
 
 
-@app.route('/painel_admin')
-def painel_admin():
-    if 'usuario_id' not in session or session['tipo'] != 'administrador':
-        return redirect(url_for('login'))
-    return render_template('painel_admin.html', nome=session['nome'])
+    
 
 
-@app.route('/painel_operador')
-def painel_operador():
-    if 'usuario_id' not in session or session['tipo'] != 'operador':
-        return redirect(url_for('login'))
-    return render_template('painel_operador.html', nome=session['nome'])
 
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('login'))
-
-@app.route('/configuracoes_admin')
-def configuracoes_admin():
-    return render_template('configuracoes_admin.html')
-
-@app.route('/config_setores')
-def config_setores():
-    return render_template('config_setores.html')
-@app.route('/config_vagas')
-def config_vagas():
-    return render_template('config_vagas.html')
-
-@app.route('/config_tarifas')
-def config_tarifas():
-    return render_template('config_tarifas.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Setores</title>
+</head>
+<body>
+
+    <h1>Lista de Setores</h1>
+
+    <table border="1">
+        <tr>
+            <th>ID Setor</th>
+            <th>Número de Vagas</th>
+        </tr>
+        {% for setor in setores %}
+        <tr>
+            <td>{{ setor[0] }}</td>
+            <td>{{ setor[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
