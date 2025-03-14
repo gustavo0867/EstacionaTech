@@ -13,6 +13,7 @@
                 <h1 class="dashboard-title">EstacionaTech</h1>
                 <div class="dashboard-user">
                     <span>Bem-vindo, {{ nome }}</span>
+                    <a href="{{ url_for('admin.painel_admin') }}" class="btn btn-primary">Voltar ao Painel</a>
                     <a href="{{ url_for('logout') }}" class="btn btn-primary">Sair</a>
                 </div>
             </nav>

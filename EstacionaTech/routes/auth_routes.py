@@ -10,8 +10,6 @@ def index():
     return redirect(url_for('auth.login'))
 
 
-
-
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

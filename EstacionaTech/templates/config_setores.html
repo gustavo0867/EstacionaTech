@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurações de Setores - EstacionaTech</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/setores.css') }}">
 </head>
 <body>
     <div class="dashboard">
@@ -12,7 +13,7 @@
             <nav class="dashboard-nav container">
                 <h1 class="dashboard-title">EstacionaTech</h1>
                 <div class="dashboard-user">
-                    <span>Bem-vindo, {{ nome }}</span>
+                    <span>Bem-vindo, {{ session.get('nome', 'Administrador') }}</span>
                     <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
                 </div>
             </nav>
@@ -20,39 +21,103 @@
         <main class="dashboard-content container">
             <h2>Configurações de Setores</h2>
 
+            <!-- Mensagens de feedback -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <div class="dashboard-grid">
                 <div class="dashboard-card">
                     <h3>Adicionar Setor</h3>
-                    <p>Crie um novo setor para organização do estacionamento.</p>
-
-
+                    <form action="{{ url_for('setor.adicionar_setor') }}" method="POST" class="form">
+                        <div class="form-group">
+                            <label class="form-label" for="id_setor">ID do Setor:</label>
+                            <input class="form-input" type="text" id="id_setor" name="id_setor" required placeholder="Ex: A, B, C, D...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="n_vagas">Número de Vagas:</label>
+                            <input class="form-input" type="number" id="n_vagas" name="n_vagas" required min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar Setor</button>
+                    </form>
                 </div>
             </div>
 
-            <h3>Setores Cadastrados</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for setor in setores %}
-                    <tr>
-                        <td>{{ setor.id_setor }}</td>
+            <h3 class="section-title">Setores Cadastrados</h3>
+            {% if setores and setores|length > 0 %}
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Número de Vagas</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for setor in setores %}
+                            <tr>
+                                <td>{{ setor[0] }}</td>
+                                <td>{{ setor[1] }}</td>
+                                <td class="actions">
+                                    <button class="btn btn-secondary" onclick="openEditModal('{{ setor[0] }}', {{ setor[1] }})">Editar</button>
+                                    <form action="{{ url_for('setor.remover_setor') }}" method="POST" class="inline-form">
+                                        <input type="hidden" name="id_setor" value="{{ setor[0] }}">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover o setor {{ setor[0] }}?')">Remover</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="no-data">Nenhum setor cadastrado.</p>
+            {% endif %}
 
-                        <td>
-                            <a href="{{ url_for('admin.configuracoes_admin', setor_id=setor.id) }}" class="btn btn-primary">Editar</a>
-                            <a href="{{ url_for('admin.configuracoes_admin', setor_id=setor.id) }}" class="btn btn-danger">Remover</a>
-                        </td>
-                    </tr>
-
-
-                    {% endfor %}
-                </tbody>
-            </table>
+            <!-- Modal de Edição -->
+            <div id="editModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeEditModal()">&times;</span>
+                    <h3>Editar Setor</h3>
+                    <form action="{{ url_for('setor.editar_setor') }}" method="POST" class="form">
+                        <input type="hidden" id="edit_id_setor" name="id_setor">
+                        <div class="form-group">
+                            <label class="form-label" for="edit_n_vagas">Número de Vagas:</label>
+                            <input class="form-input" type="number" id="edit_n_vagas" name="n_vagas" required min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
+
+    <script>
+        // Funções para controlar o modal de edição
+        function openEditModal(id, vagas) {
+            document.getElementById('edit_id_setor').value = id;
+            document.getElementById('edit_n_vagas').value = vagas;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Fecha o modal se clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
