@@ -22,6 +22,8 @@ class SetorController:
     @staticmethod
     def buscar_setor(id_setor):
         """Busca um setor pelo ID"""
+
+
         conn = conectar()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM Setor WHERE id_setor = ?", (id_setor,))

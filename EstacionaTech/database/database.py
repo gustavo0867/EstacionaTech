@@ -124,6 +124,12 @@ def criar_tabelas():
         VALUES (?, ?)
         """, (5.00, 15))  # Exemplo: valor R$ 5,00 por hora e 15 minutos de tolerância
 
+    # cursor.execute("SELECT * FROM Setor")
+    # if not cursor.fetchone():
+    #     cursor.execute(""" INSERT INTO Setor(id_setor, n_vagas) VALUES (?, ?)""", ('B', 15))
+
+    #cursor.execute("INSERT INTO setor (id_setor, n_vagas) VALUES (?, ?)", ('B', 15))
+
     # Verifica se o usuário master já existe
     cursor.execute("SELECT * FROM Usuario WHERE email = 'master@admin.com'")
     if not cursor.fetchone():
@@ -140,6 +146,8 @@ def criar_tabelas():
             'administrador',
             datetime.datetime.now()
         ))
+
+
 
     conexao.commit()
     conexao.close()
