@@ -30,6 +30,7 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(operador_bp, url_prefix='/operador')
 app.register_blueprint(configadm_bp, url_prefix='/configadm')
 app.register_blueprint(tarifa_bp, url_prefix='/tarifa')
+app.register_blueprint(setor_bp, url_prefix='/setor')
 
 
     

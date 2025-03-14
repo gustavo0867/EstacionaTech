@@ -24,33 +24,34 @@
                 <div class="dashboard-card">
                     <h3>Adicionar Setor</h3>
                     <p>Crie um novo setor para organização do estacionamento.</p>
-                    <a href="{{ url_for('') }}" class="btn btn-primary">Adicionar</a>
+
+
                 </div>
             </div>
 
-            <h3>Setores Atuais</h3>
+            <h3>Setores Cadastrados</h3>
             <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nome</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for setor in setores %}
                     <tr>
-                        <td>{{ setor.id }}</td>
-                        <td>{{ setor.nome }}</td>
+                        <td>{{ setor.id_setor }}</td>
+
                         <td>
-                            <a href="{{ url_for('configuracoes_admin', setor_id=setor.id) }}" class="btn btn-primary">Editar</a>
-                            <a href="{{ url_for('configuracoes_admin', setor_id=setor.id) }}" class="btn btn-danger">Remover</a>
+                            <a href="{{ url_for('admin.configuracoes_admin', setor_id=setor.id) }}" class="btn btn-primary">Editar</a>
+                            <a href="{{ url_for('admin.configuracoes_admin', setor_id=setor.id) }}" class="btn btn-danger">Remover</a>
                         </td>
                     </tr>
+
+
                     {% endfor %}
                 </tbody>
             </table>
-
         </main>
     </div>
 </body>
