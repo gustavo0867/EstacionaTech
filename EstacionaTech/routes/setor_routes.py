@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from EstacionaTech.EstacionaTech.controllers.setor_controller import SetorController
+from EstacionaTech.controllers.setor_controller import SetorController
 
 setor_bp = Blueprint('setor', __name__, template_folder='../templates')
 
@@ -29,7 +29,7 @@ def adicionar_setor():
             flash('O número de vagas deve ser maior que zero!', 'error')
             return redirect(url_for('setor.config_setores'))
 
-        result = SetorController.inserir_setor(id_setor, n_vagas)
+        result = SetorController.criar_setor(id_setor, n_vagas)
         if result:
             flash(f'Setor {id_setor} adicionado com sucesso!', 'success')
         else:
@@ -59,7 +59,7 @@ def editar_setor():
             flash('O número de vagas deve ser maior que zero!', 'error')
             return redirect(url_for('setor.config_setores'))
 
-        result = SetorController.atualizar_setor(id_setor, n_vagas)
+        result = SetorController.editar_setor(id_setor, n_vagas)
         if result:
             flash(f'Setor {id_setor} atualizado com sucesso!', 'success')
         else:
@@ -82,7 +82,7 @@ def remover_setor():
         flash('ID do setor não fornecido!', 'error')
         return redirect(url_for('setor.config_setores'))
 
-    result = SetorController.remover_setor(id_setor)
+    result = SetorController.excluir_setor(id_setor)
     if result:
         flash(f'Setor {id_setor} removido com sucesso!', 'success')
     else:

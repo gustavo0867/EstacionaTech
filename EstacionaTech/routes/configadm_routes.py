@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from EstacionaTech.database.database import conectar
-from EstacionaTech.models.setor import listar_setores
+#from EstacionaTech.models.setor import listar_todos
 import datetime
 import sqlite3
 
