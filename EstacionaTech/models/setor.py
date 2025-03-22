@@ -49,12 +49,12 @@ class Setor:
         finally:
             conn.close()
 
-    def deletar(self):
+    def deletar(id):
         """Remove um setor pelo ID"""
         conn = conectar()
         cursor = conn.cursor()
         try:
-            cursor.execute("DELETE FROM Setor WHERE id_setor = ?", (self.id_setor,))
+            cursor.execute("DELETE FROM Setor WHERE id_setor = ?", (id))
             conn.commit()
             return True
         except sqlite3.Error as e:
@@ -70,7 +70,6 @@ class Setor:
         cursor.execute("SELECT * FROM Setor")
         setores = cursor.fetchall()
         #setores_formatados = [{"id_setor": s[0], "n_vagas": s[1]} for s in setores]
-
 
         conn.close()
 
