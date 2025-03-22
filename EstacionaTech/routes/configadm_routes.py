@@ -21,7 +21,7 @@ def config_setores():
     return redirect(url_for('setor.config_setores'))
 
 
-@configadm_bp.route('/config_vagas')
+@configadm_bp.route('/config_vagas', methods=['GET', 'POST'])
 def config_vagas():
     return render_template('config_vagas.html')
 

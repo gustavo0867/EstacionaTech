@@ -1,13 +1,4 @@
-import sqlite3
-from EstacionaTech.database.database import conectar
 from EstacionaTech.models.setor import Setor
-
-# criar_setor(nome, n_vagas) → Cria um setor chamando salvar() do Model.
-# editar_setor(id_setor, nome, n_vagas) → Atualiza um setor chamando atualizar().
-# excluir_setor(id_setor)
-# obter_setor(id_setor) → Retorna um setor específico, chamando buscar_por_id().
-# listar_setores()
-
 
 class SetorController:
     @staticmethod
