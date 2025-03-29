@@ -36,7 +36,39 @@ class Vaga:
         vaga = cursor.fetchone()
         return vaga
 
-    def atualizar(self, setor=None, tipo=None, status=None):
+    def atualizar(self, tipo=None, status=None):
+        # """Atualiza os dados de uma vaga."""
+        # conn = conectar()
+        # cursor = conn.cursor()
+        #
+        # updates = []
+        # values = []
+        #
+        # # if setor:
+        # #     updates.append("setor = ?")
+        # #     values.append(setor)
+        # if tipo:
+        #     updates.append("tipo = ?")
+        #     values.append(tipo)
+        # if status:
+        #     updates.append("status = ?")
+        #     values.append(status)
+        #
+        # values.append(self.id_vaga)
+        # try:
+        #     query = f"UPDATE vaga SET {', '.join(updates)} WHERE id_vaga = ?"
+        #     cursor.execute(query, values)
+        #     conn.commit()
+        #     return True
+        # except sqlite3.Error as e:
+        #     print(f"Erro ao atualizar vaga: {e}")
+        #     return False
+        # finally:
+        #     conn.close()
+
+
+        #####
+
         """Atualiza os dados de uma vaga."""
         conn = conectar()
         cursor = conn.cursor()
@@ -44,17 +76,21 @@ class Vaga:
         updates = []
         values = []
 
-        if setor:
-            updates.append("setor = ?")
-            values.append(setor)
-        if tipo:
+        if tipo is not None:
             updates.append("tipo = ?")
             values.append(tipo)
-        if status:
+        if status is not None:
             updates.append("status = ?")
             values.append(status)
 
+        # Se não houver nada para atualizar, evita erro SQL
+        if not updates:
+            conn.close()
+            return False
+
+        # Adiciona o ID da vaga no final dos valores
         values.append(self.id_vaga)
+
         try:
             query = f"UPDATE vaga SET {', '.join(updates)} WHERE id_vaga = ?"
             cursor.execute(query, values)
@@ -72,7 +108,8 @@ class Vaga:
         cursor = conn.cursor()
 
         try:
-            cursor.execute("DELETE FROM vaga WHERE id_vaga = ?", (id))
+            query = "DELETE FROM vaga WHERE id_vaga = ?"
+            cursor.execute(query, (id,))
             conn.commit()
             print("Vaga removida com sucesso.")
             return True

@@ -43,6 +43,7 @@
                         <div class="form-group">
                             <label class="form-label" for="setor">Setor:</label>
                             <select class="form-input" id="setor" name="setor" required>
+                                <option value="" disabled selected>Selecione um setor disponível</option>
                                 {% for setor in setores %}
                                     <option value="{{ setor[0] }}">{{ setor[0] }}</option>
                                 {% endfor %}
@@ -51,6 +52,7 @@
                         <div class="form-group">
                             <label class="form-label" for="tipo">Tipo:</label>
                             <select class="form-input" id="tipo" name="tipo" required>
+                                <option value="" disabled selected>Selecione uma opção</option>
                                 <option value="carro">Carro</option>
                                 <option value="moto">Moto</option>
                                 <option value="deficiente">Deficiente</option>
@@ -60,9 +62,8 @@
                         <div class="form-group">
                             <label class="form-label" for="status">Status:</label>
                             <select class="form-input" id="status" name="status" required>
+                                <option value="" disabled selected>Selecione o status da vaga</option>
                                 <option value="livre">Livre</option>
-                                <option value="ocupada">Ocupada</option>
-                                <option value="reservada">Reservada</option>
                                 <option value="manutenção">Manutenção</option>
                             </select>
                         </div>
@@ -72,7 +73,13 @@
             </div>
 
             <h3 class="section-title">Vagas Cadastradas</h3>
+
+
+            {% for setor in setores %}
+                <h4 class="setor-section-title"> SETOR {{ setor[0] }}</h4>
+
             {% if vagas and vagas|length > 0 %}
+
                 <div class="table-container">
                     <table class="table">
                         <thead>
@@ -86,6 +93,7 @@
                         </thead>
                         <tbody>
                             {% for vaga in vagas %}
+                            {% if setor[0] == vaga[1] %}
                             <tr>
                                 <td>{{ vaga[0] }}</td>
                                 <td>{{ vaga[1] }}</td>
@@ -99,6 +107,7 @@
                                     </form>
                                 </td>
                             </tr>
+                            {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -107,6 +116,11 @@
                 <p class="no-data">Nenhuma vaga cadastrada.</p>
             {% endif %}
 
+
+
+            {% endfor %}
+
+
             <!-- Modal de Edição -->
             <div id="editModal" class="modal">
                 <div class="modal-content">
@@ -114,27 +128,29 @@
                     <h3>Editar Vaga</h3>
                     <form action="{{ url_for('vaga.editar_vaga') }}" method="POST" class="form">
                         <input type="hidden" id="edit_id_vaga" name="id_vaga">
+
                         <div class="form-group">
                             <label class="form-label" for="edit_setor">Setor:</label>
-                            <select class="form-input" id="edit_setor" name="setor" required>
+                            <select class="form-input" id="edit_setor" name="setor" disabled>
                                 {% for setor in setores %}
-                                    <option value="{{ setor.id_setor }}">{{ setor.id_setor }}</option>
+                                    <option value="{{ setor[0] }}">{{ setor[0] }}</option>
                                 {% endfor %}
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label class="form-label" for="edit_tipo">Tipo:</label>
                             <select class="form-input" id="edit_tipo" name="tipo" required>
-                                <option value="Comum">Comum</option>
-                                <option value="Especial">Especial</option>
+                                <option value="carro">Carro</option>
+                                <option value="moto">Moto</option>
+                                <option value="deficiente">Deficiente</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_status">Status:</label>
                             <select class="form-input" id="edit_status" name="status" required>
-                                <option value="Livre">Livre</option>
-                                <option value="Ocupada">Ocupada</option>
-                                <option value="Manutenção">Manutenção</option>
+                                <option value="livre">Livre</option>
+                                <option value="manutenção">Manutenção</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Salvar Alterações</button>
@@ -168,3 +184,5 @@
     </script>
 </body>
 </html>
+
+

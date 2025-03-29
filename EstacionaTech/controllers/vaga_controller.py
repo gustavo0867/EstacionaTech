@@ -17,7 +17,8 @@ class VagaController:
     def editar_vaga(id_vaga, setor, tipo, status):
         """Atualiza os dados de uma vaga"""
         vaga = Vaga(id_vaga, setor, tipo, status)
-        vaga.atualizar()
+        return vaga.atualizar(tipo, status)
+
 
     @staticmethod
     def excluir_vaga(id_vaga):
