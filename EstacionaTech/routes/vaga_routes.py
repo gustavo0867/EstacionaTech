@@ -51,11 +51,12 @@ def editar_vaga():
         return redirect(url_for('auth.login'))
 
     id_vaga = request.form.get('id_vaga')
+    print(f'VAGAAA: {id_vaga}')
     setor = request.form.get('setor')
     tipo = request.form.get('tipo')
     status = request.form.get('status')
 
-    if not id_vaga or not setor or not tipo or not status:
+    if not id_vaga or not tipo or not status:
         flash('Todos os campos são obrigatórios!', 'error')
         return redirect(url_for('vaga.config_vagas'))
 
@@ -68,7 +69,7 @@ def editar_vaga():
     except ValueError:
         flash('Os campos digitados devem ser válidos!', 'error')
 
-    return redirect(url_for('vaga.config_vaga'))
+    return redirect(url_for('vaga.config_vagas'))
 
 
 @vaga_bp.route('/remover_vaga', methods=['POST'])
