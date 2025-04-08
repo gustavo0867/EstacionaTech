@@ -12,7 +12,8 @@ from EstacionaTech.routes.configadm_routes import configadm_bp
 from EstacionaTech.routes.tarifa_routes import tarifa_bp
 from EstacionaTech.routes.setor_routes import setor_bp
 from EstacionaTech.routes.vaga_routes import vaga_bp
-
+from EstacionaTech.routes.locacao_routes import locacao_bp
+from EstacionaTech.routes.veiculo_routes import veiculo_bp
 
 app = Flask(__name__, static_folder='EstacionaTech/static', template_folder='EstacionaTech/templates')
 app.secret_key = 'chave_secreta_super_segura'
@@ -32,7 +33,8 @@ app.register_blueprint(configadm_bp, url_prefix='/configadm')
 app.register_blueprint(tarifa_bp, url_prefix='/tarifa')
 app.register_blueprint(setor_bp, url_prefix='/setor')
 app.register_blueprint(vaga_bp, url_prefix='/vaga')
-
+app.register_blueprint(veiculo_bp, url_prefix='/veiculo')
+app.register_blueprint(locacao_bp, url_prefix='/locacao')
 
 if __name__ == '__main__':
    app.run(debug=True)
