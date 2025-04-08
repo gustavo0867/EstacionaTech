@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from EstacionaTech.controllers.vaga_controller import VagaController
-from EstacionaTech.controllers.setor_controller import SetorController
+from EstacionaTech.EstacionaTech.controllers.vaga_controller import VagaController
+from EstacionaTech.EstacionaTech.controllers.setor_controller import SetorController
 
 
 vaga_bp = Blueprint('vaga', __name__, template_folder='../templates')
@@ -91,3 +91,13 @@ def remover_vaga():
         flash('Erro ao remover vaga. Verifique se a vaga existe', 'error')
 
     return redirect(url_for('vaga.config_vagas'))
+
+@vaga_bp.route('/visualizar_vagas')
+def visualizar_vagas():
+    if 'usuario_id' not in session:
+        flash('Você precisa fazer login para acessar esta página.', 'error')
+        return redirect(url_for('auth.login'))
+
+    vagas = VagaController.listar_vagas()
+    setores = SetorController.listar_setores()
+    return render_template('visualizar_vagas.html', vagas=vagas, setores=setores, nome=session.get('nome'))
