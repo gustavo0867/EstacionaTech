@@ -1,4 +1,4 @@
-from EstacionaTech.models.vaga import Vaga
+from EstacionaTech.EstacionaTech.models.vaga import Vaga
 
 class VagaController:
     @staticmethod
