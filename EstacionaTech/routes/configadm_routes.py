@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from EstacionaTech.database.database import conectar
-from EstacionaTech.models.setor import listar_setores
+#from EstacionaTech.models.setor import listar_todos
 import datetime
 import sqlite3
 
@@ -21,7 +21,7 @@ def config_setores():
     return redirect(url_for('setor.config_setores'))
 
 
-@configadm_bp.route('/config_vagas')
+@configadm_bp.route('/config_vagas', methods=['GET', 'POST'])
 def config_vagas():
     return render_template('config_vagas.html')
 

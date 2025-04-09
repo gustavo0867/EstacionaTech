@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operações de Estacionamento - EstacionaTech</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/entrada_saida.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <nav class="dashboard-nav container">
+                <h1 class="dashboard-title">EstacionaTech</h1>
+                <div class="dashboard-user">
+                    <span>{{ nome }}</span>
+                    {% if session.get('tipo') == 'administrador' %}
+                    <a href="{{ url_for('admin.painel_admin') }}" class="btn btn-primary">Voltar ao Painel</a>
+                    {% else %}
+                    <a href="{{ url_for('operadores.painel_operador') }}" class="btn btn-primary">Voltar ao Painel</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="dashboard-content container">
+            <h2>Operações de Entrada e Saída</h2>
+
+            <!-- Mensagens Flash -->
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="parking-operations">
+                <!-- Seção de Entrada de Veículos -->
+                <section class="operation-section">
+                    <div class="section-header">
+                        <h3>Registrar Entrada de Veículo</h3>
+                    </div>
+                    <form action="{{ url_for('locacao.registrar_entrada') }}" method="post" class="operation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="placa">Placa do Veículo:</label>
+                                <input type="text" id="placa" name="placa" required placeholder="ABC1234">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_vaga">Vaga:</label>
+                                <select id="id_vaga" name="id_vaga" required>
+                                    <option value="">Selecione uma vaga</option>
+                                    {% for vaga in vagas_disponiveis %}
+                                    <option value="{{ vaga[0] }}">{{ vaga[0] }} ({{ vaga[2] }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn-entry">Registrar Entrada</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Seção de Veículos Estacionados -->
+                <section class="operation-section">
+                    <div class="section-header">
+                        <h3>Veículos Estacionados</h3>
+                        <form action="{{ url_for('locacao.buscar_veiculo') }}" method="post" class="search-box">
+                            <input type="text" name="placa_busca" placeholder="Buscar por placa..." value="{{ termo_busca if termo_busca else '' }}">
+                            <button type="submit">Buscar</button>
+                        </form>
+                    </div>
+
+                    {% if locacoes_ativas %}
+                    <table class="locacoes-table">
+                        <thead>
+                            <tr>
+                                <th>Vaga</th>
+                                <th>Placa</th>
+                                <th>Veículo</th>
+                                <th>Entrada</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for locacao in locacoes_ativas %}
+                            <tr>
+                                <td>{{ locacao[1] }}</td>
+                                <td>{{ locacao[2] }}</td>
+                                <td>{{ locacao[4] }} ({{ locacao[5] }})</td>
+                                <td>
+                                    {% if locacao[3].__class__.__name__ == 'datetime' %}
+                                        {{ locacao[3].strftime('%d/%m/%Y %H:%M') }}
+                                    {% else %}
+                                        {{ locacao[3] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('locacao.registrar_saida', id_locacao=locacao[0]) }}" class="btn-exit">Registrar Saída</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>Não há veículos estacionados no momento{% if busca_realizada %} com a placa "{{ termo_busca }}"{% endif %}.</p>
+                    {% endif %}
+                </section>
+
+                <!-- Histórico Recente -->
+                <section class="operation-section">
+                    <div class="section-header">
+                        <h3>Histórico Recente</h3>
+                    </div>
+
+                    {% if historico_recente %}
+                    <table class="locacoes-table">
+                        <thead>
+                            <tr>
+                                <th>Vaga</th>
+                                <th>Placa</th>
+                                <th>Veículo</th>
+                                <th>Entrada</th>
+                                <th>Saída</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for locacao in historico_recente %}
+                            <tr>
+                                <td>{{ locacao[1] }}</td>
+                                <td>{{ locacao[2] }}</td>
+                                <td>{{ locacao[5] }} ({{ locacao[6] }})</td>
+                                <td>
+                                  {% if locacao[3] is mapping or locacao[3].__class__.__name__ == 'datetime' %}
+                                    {{ locacao[3].strftime('%d/%m/%Y %H:%M') }}
+                                  {% else %}
+                                    {{ locacao[3] }}
+                                  {% endif %}
+                                </td>
+                                <td>
+                                {% if locacao[4] %}
+                                    {% if locacao[4].__class__.__name__ == 'datetime' %}
+                                        {{ locacao[4].strftime('%d/%m/%Y %H:%M') }}
+                                    {% else %}
+                                        {{ locacao[4] }}
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                                </td>
+                                <td>
+                                    {% if locacao[4] %}
+                                        <span class="status-finished">Finalizado</span>
+                                    {% else %}
+                                        <span class="status-active">Ativo</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>Não há registros recentes.</p>
+                    {% endif %}
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Definição de variáveis globais */
 :root {
     --primary: #007bff;
@@ -107,4 +108,55 @@ button:hover {
     background-color: #fee2e2;
     color: #991b1b;
     border: 1px solid #fecaca;
+}
+
+/* Estilos específicos para a página de configuração de tarifas */
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os itens horizontalmente */
+}
+
+.form {
+    width: 100%;
+    max-width: 400px; /* Define uma largura máxima para o formulário */
+    padding: 20px; /* Adiciona um pouco de espaçamento interno */
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    width: 100%; /* Garante que os grupos de formulário ocupem a largura */
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center; /* Centraliza os botões */
+    margin-top: 1.5rem;
+}
+
+.dashboard-content.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
+    min-height: 80vh;
+    padding: 2rem 1rem;
+    /* Adicione a seguinte linha para garantir que o grid ocupe a largura disponível */
+    width: 100%;
+}
+
+.dashboard-grid {
+    display: flex; /* Usar flex para centralizar o card dentro do grid */
+    justify-content: center; /* Centraliza o card horizontalmente */
+    align-items: center; /* Centraliza o card verticalmente (se o grid tiver altura) */
+    width: auto; /* Ocupa a largura necessária para os seus filhos */
+    /* Remova ou comente a propriedade grid-template-columns se estiver presente */
+}
+
+.dashboard-card {
+    /* Seus estilos para o card */
+    width: 100%; /* Garante que o card ocupe a largura do grid (se necessário) */
+    max-width: 400px; /* Defina uma largura máxima para o card se não deve ocupar toda a largura */
 }

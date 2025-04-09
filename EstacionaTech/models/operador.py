@@ -1,4 +1,4 @@
-from EstacionaTech.EstacionaTech.database.database import conectar
+from EstacionaTech.database.database import conectar
 import sqlite3
 import datetime
 

@@ -1,10 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Configurações das Vagas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração de Vagas - EstacionaTech</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vagas.css') }}">
 </head>
 <body>
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <nav class="dashboard-nav container">
+                <h1 class="dashboard-title">EstacionaTech</h1>
+                <div class="dashboard-user">
+                    <span>{{ session.get('nome') }}</span>
+                    <a href="{{ url_for('admin.configuracoes_admin') }}" class="btn btn-primary">Voltar</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
+                </div>
+            </nav>
+        </header>
 
+        <main class="dashboard-content container">
+            <h2 class="section-title">Gerenciar Vagas</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="dashboard-grid">
+                <!-- Card do formulário -->
+                <div class="dashboard-card">
+                    <h3>Adicionar Vaga</h3>
+                    <form action="{{ url_for('vaga.adicionar_vaga') }}" method="POST" class="form">
+                        <div class="form-group">
+                            <label class="form-label" for="id_vaga">ID da Vaga:</label>
+                            <input class="form-input" type="text" id="id_vaga" name="id_vaga" required placeholder="Ex: A1, B2, C3...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="setor">Setor:</label>
+                            <select class="form-input" id="setor" name="setor" required>
+                                <option value="" disabled selected>Selecione um setor disponível</option>
+                                {% for setor in setores %}
+                                    <option value="{{ setor[0] }}">{{ setor[0] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tipo">Tipo:</label>
+                            <select class="form-input" id="tipo" name="tipo" required>
+                                <option value="" disabled selected>Selecione uma opção</option>
+                                <option value="carro">Carro</option>
+                                <option value="moto">Moto</option>
+                                <option value="deficiente">Deficiente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="status">Status:</label>
+                            <select class="form-input" id="status" name="status" required>
+                                <option value="" disabled selected>Selecione o status da vaga</option>
+                                <option value="livre">Livre</option>
+                                <option value="manutenção">Manutenção</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar Vaga</button>
+                    </form>
+                </div>
+
+                <!-- Card da tabela -->
+                <div class="dashboard-card">
+                    <h3 class="section-title">Vagas Cadastradas</h3>
+
+                    <div class="setor-container">
+                        {% for setor in setores|batch(2, '') %}
+                        <div class="setor-row">
+                            {% for s in setor %}
+                                {% if s %}
+                                    <div class="setor-box">
+                                        <h4 class="setor-section-title">SETOR {{ s[0] }}</h4>
+                                        {% set setor_vagas = vagas|selectattr('1', 'equalto', s[0])|list %}
+                                        {% if setor_vagas %}
+                                        <div class="table-container">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Setor</th>
+                                                        <th>Tipo</th>
+                                                        <th>Status</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for vaga in setor_vagas %}
+                                                    <tr>
+                                                        <td>{{ vaga[0] }}</td>
+                                                        <td>{{ vaga[1] }}</td>
+                                                        <td>{{ vaga[2] }}</td>
+                                                        <td>{{ vaga[3] }}</td>
+                                                        <td class="actions">
+                                                            <button class="btn btn-secondary" onclick="openEditModal('{{ vaga[0] }}', '{{ vaga[1] }}', '{{ vaga[2] }}', '{{ vaga[3] }}')">Editar</button>
+                                                            <form action="{{ url_for('vaga.remover_vaga') }}" method="POST" class="inline-form">
+                                                                <input type="hidden" name="id_vaga" value="{{ vaga[0] }}">
+                                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover a vaga {{ vaga[0] }}?')">Remover</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        {% else %}
+                                            <p class="no-data">Nenhuma vaga cadastrada no setor {{ s[0] }}.</p>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal de Edição -->
+            <div id="editModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeEditModal()">&times;</span>
+                    <h3>Editar Vaga</h3>
+                    <form action="{{ url_for('vaga.editar_vaga') }}" method="POST" class="form">
+                        <input type="hidden" id="edit_id_vaga" name="id_vaga">
+
+                        <div class="form-group">
+                            <label for="edit_setor">Setor</label>
+                            <select id="edit_setor" name="setor" disabled>
+                                {% for setor in setores %}
+                                    <option value="{{ setor[0] }}">{{ setor[0] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_tipo">Tipo</label>
+                            <select id="edit_tipo" name="tipo" required>
+                                <option value="carro">Carro</option>
+                                <option value="moto">Moto</option>
+                                <option value="deficiente">Deficiente</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_status">Status</label>
+                            <select id="edit_status" name="status" required>
+                                <option value="livre">Livre</option>
+                                <option value="manutenção">Manutenção</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function openEditModal(id, setor, tipo, status) {
+            document.getElementById('edit_id_vaga').value = id;
+            document.getElementById('edit_setor').value = setor;
+            document.getElementById('edit_tipo').value = tipo;
+            document.getElementById('edit_status').value = status;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

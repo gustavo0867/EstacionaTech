@@ -13,7 +13,8 @@
             <nav class="dashboard-nav container">
                 <h1 class="dashboard-title">EstacionaTech</h1>
                 <div class="dashboard-user">
-                    <span>Bem-vindo, {{ nome }}</span>
+                    <span>{{ session.get('nome') }}</span>
+                    <a href="{{ url_for('admin.configuracoes_admin') }}" class="btn btn-primary">Voltar as Configurações</a>
                     <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
                 </div>
             </nav>

@@ -122,3 +122,75 @@
     color: #991b1b;
     border: 1px solid #fecaca;
 }
+
+.setores-layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    margin-top: 1rem; /* Reduza a margem superior do layout geral */
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2rem;
+    align-items: start;
+    justify-content: center;
+}
+
+.form-container {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.table-container {
+    margin-top: 0;
+}
+
+.table-container h3.section-title {
+    margin-top: 0rem; /* Se precisar de espaço entre o topo do container e o título */
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.form .btn {
+    margin-top: 1rem;
+    margin-right: 0.5rem;
+}
+
+.setores-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: flex-start;
+}
+
+.setor-card {
+    background-color: var(--surface);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.5rem;
+    flex: 1 1 calc(50% - 1.5rem); /* Até 2 por linha */
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .setor-card {
+        flex: 1 1 100%;
+    }
+}
+
+.setor-card p {
+    margin: 0.3rem 0;
+}
+
+.botoes-acoes {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-content {
+  padding: 2rem;
+}
+

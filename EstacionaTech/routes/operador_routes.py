@@ -4,6 +4,9 @@ from EstacionaTech.EstacionaTech.models.operador import Operador
 
 operador_bp = Blueprint('operadores', __name__, template_folder='../templates')
 
+@operador_bp.route('/painel_operador')
+def painel_operador():
+    return render_template('painel_operador.html', nome=session['nome'])
 
 @operador_bp.route('/config_operadores', methods=['GET', 'POST'])
 def config_operadores():
