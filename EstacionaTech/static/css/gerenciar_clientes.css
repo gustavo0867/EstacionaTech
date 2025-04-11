@@ -8,6 +8,8 @@
     margin-bottom: 16px;
     overflow: hidden;
     border: 1px solid #eaedf3;
+    max-width: 900px; /* Aumente este valor para a largura máxima desejada */
+    width: 100%;
 }
 
 .cliente-header {

@@ -65,7 +65,10 @@
                             <input type="password" id="confirmar_senha" name="confirmar_senha" class="form-input" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Adicionar Operador</button>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Adicionar Operador</button>
+                        <a href="{{ url_for('configadm.configuracoes_admin') }}" class="btn btn-secondary">Voltar</a>
+                    </div>
                 </form>
             </div>
 
