@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from EstacionaTech.EstacionaTech.controllers.locacao_controller import LocacaoController
-from EstacionaTech.EstacionaTech.controllers.veiculo_controller import VeiculoController
-from EstacionaTech.EstacionaTech.controllers.pagamento_controller import PagamentoController
+from EstacionaTech.controllers.locacao_controller import LocacaoController
+from EstacionaTech.controllers.veiculo_controller import VeiculoController
+from EstacionaTech.controllers.pagamento_controller import PagamentoController
 import datetime
 
 locacao_bp = Blueprint('locacao', __name__, template_folder='../templates')

@@ -1,6 +1,6 @@
-from EstacionaTech.EstacionaTech.models.veiculo import Veiculo
-from EstacionaTech.EstacionaTech.models.vaga import Vaga
-from EstacionaTech.EstacionaTech.models.locacao import Locacao
+from EstacionaTech.models.veiculo import Veiculo
+from EstacionaTech.models.vaga import Vaga
+from EstacionaTech.models.locacao import Locacao
 
 class LocacaoController:
     @staticmethod
