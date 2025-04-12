@@ -124,7 +124,7 @@ class Vaga:
         conn = conectar()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT * FROM vaga")
+        cursor.execute("SELECT * FROM vaga ORDER BY id_vaga ASC")
         vagas = cursor.fetchall()
 
         conn.close()

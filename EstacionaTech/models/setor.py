@@ -67,7 +67,7 @@ class Setor:
         """Busca a setores no banco de dados"""
         conn = conectar()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Setor")
+        cursor.execute("SELECT * FROM Setor ORDER BY id_setor ASC")
         setores = cursor.fetchall()
         #setores_formatados = [{"id_setor": s[0], "n_vagas": s[1]} for s in setores]
 

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from EstacionaTech.EstacionaTech.controllers.vaga_controller import VagaController
-from EstacionaTech.EstacionaTech.controllers.setor_controller import SetorController
+from EstacionaTech.controllers.vaga_controller import VagaController
+from EstacionaTech.controllers.setor_controller import SetorController
 
 
 vaga_bp = Blueprint('vaga', __name__, template_folder='../templates')
