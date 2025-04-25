@@ -64,9 +64,16 @@ class Cliente:
         """Lista todos os clientes cadastrados."""
         conn = conectar()
         cursor = conn.cursor()
+
+        # cursor.execute("SELECT * FROM cliente ORDER BY id_cliente ASC")
+        # clientes = cursor.fetchall()
+        #
+        # conn.close()
+        #
+        # return clientes
         try:
             cursor.execute('''
-                SELECT c.*, COUNT(v.placa) as qtd_veiculos 
+                SELECT c.*, COUNT(v.placa) as qtd_veiculos
                 FROM Cliente c
                 LEFT JOIN Veiculo v ON c.id_cliente = v.id_cliente
                 GROUP BY c.id_cliente

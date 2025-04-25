@@ -2,10 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from EstacionaTech.controllers.veiculo_controller import VeiculoController
 from EstacionaTech.controllers.cliente_controller import ClienteController
 
-veiculo_bp = Blueprint('veiculo', __name__, template_folder='../templates')
+cliente_bp = Blueprint('cliente', __name__, template_folder='../templates')
 
 
-@veiculo_bp.route('/gerenciar_clientes')
+@cliente_bp.route('/gerenciar_clientes')
 def gerenciar_clientes():
     """Página de gerenciamento de clientes e veículos (operadores)"""
     if 'usuario_id' not in session:
@@ -22,7 +22,7 @@ def gerenciar_clientes():
     )
 
 
-@veiculo_bp.route('/adicionar_cliente', methods=['POST'])
+@cliente_bp.route('/adicionar_cliente', methods=['POST'])
 def adicionar_cliente():
     """Adiciona um novo cliente"""
     if 'usuario_id' not in session:
@@ -41,13 +41,13 @@ def adicionar_cliente():
 
     if not nome or not cpf or not telefone or not email:
         flash('Nome, CPF, telefone e email são obrigatórios.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Verificar se o cliente já existe
     cliente_existente = ClienteController.buscar_por_cpf(cpf)
     if cliente_existente:
         flash('CPF já cadastrado.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Adicionar cliente
     sucesso = ClienteController.criar_cliente(nome, cpf, telefone, email, mensalista, modalidade)
@@ -57,10 +57,10 @@ def adicionar_cliente():
     else:
         flash('Erro ao adicionar cliente.', 'error')
 
-    return redirect(url_for('veiculo.gerenciar_clientes'))
+    return redirect(url_for('cliente.gerenciar_clientes'))
 
 
-@veiculo_bp.route('/editar_cliente/<int:id_cliente>', methods=['POST'])
+@cliente_bp.route('/editar_cliente/<int:id_cliente>', methods=['POST'])
 def editar_cliente(id_cliente):
     """Edita um cliente existente"""
     if 'usuario_id' not in session:
@@ -79,7 +79,7 @@ def editar_cliente(id_cliente):
 
     if not nome or not cpf:
         flash('Nome e CPF são obrigatórios.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Editar cliente
     sucesso = ClienteController.editar_cliente(id_cliente, nome, cpf, telefone, email, mensalista, modalidade)
@@ -89,10 +89,10 @@ def editar_cliente(id_cliente):
     else:
         flash('Erro ao atualizar cliente.', 'error')
 
-    return redirect(url_for('veiculo.gerenciar_clientes'))
+    return redirect(url_for('cliente.gerenciar_clientes'))
 
 
-@veiculo_bp.route('/excluir_cliente/<int:id_cliente>')
+@cliente_bp.route('/excluir_cliente/<int:id_cliente>')
 def excluir_cliente(id_cliente):
     """Remove um cliente"""
     if 'usuario_id' not in session:
@@ -103,7 +103,7 @@ def excluir_cliente(id_cliente):
     veiculos = VeiculoController.listar_por_cliente(id_cliente)
     if veiculos:
         flash('Não é possível excluir este cliente pois possui veículos cadastrados.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Excluir cliente
     sucesso = ClienteController.excluir_cliente(id_cliente)
@@ -113,9 +113,9 @@ def excluir_cliente(id_cliente):
     else:
         flash('Erro ao excluir cliente.', 'error')
 
-    return redirect(url_for('veiculo.gerenciar_clientes'))
+    return redirect(url_for('cliente.gerenciar_clientes'))
 
-@veiculo_bp.route('/adicionar_veiculo', methods=['POST'])
+@cliente_bp.route('/adicionar_veiculo', methods=['POST'])
 def adicionar_veiculo():
     """Adiciona um novo veículo"""
     if 'usuario_id' not in session:
@@ -131,13 +131,13 @@ def adicionar_veiculo():
 
     if not placa or not modelo or not id_cliente:
         flash('Placa, modelo e cliente são obrigatórios.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Verificar se o veículo já existe
     veiculo_existente = VeiculoController.obter_veiculo(placa)
     if veiculo_existente:
         flash('Veículo com esta placa já cadastrado.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Adicionar veículo
     sucesso = VeiculoController.criar_veiculo(placa, modelo, marca, cor, ano_fabricacao, id_cliente)
@@ -147,10 +147,10 @@ def adicionar_veiculo():
     else:
         flash('Erro ao adicionar veículo.', 'error')
 
-    return redirect(url_for('veiculo.gerenciar_clientes'))
+    return redirect(url_for('cliente.gerenciar_clientes'))
 
 
-@veiculo_bp.route('/editar_veiculo/<placa>', methods=['POST'])
+@cliente_bp.route('/editar_veiculo/<placa>', methods=['POST'])
 def editar_veiculo(placa):
     """Edita um veículo existente"""
     if 'usuario_id' not in session:
@@ -165,7 +165,7 @@ def editar_veiculo(placa):
 
     if not modelo or not id_cliente:
         flash('Modelo e cliente são obrigatórios.', 'error')
-        return redirect(url_for('veiculo.gerenciar_clientes'))
+        return redirect(url_for('cliente.gerenciar_clientes'))
 
     # Editar veículo
     sucesso = VeiculoController.editar_veiculo(placa, modelo, marca, cor, ano_fabricacao, id_cliente)
@@ -175,10 +175,10 @@ def editar_veiculo(placa):
     else:
         flash('Erro ao atualizar veículo.', 'error')
 
-    return redirect(url_for('veiculo.gerenciar_clientes'))
+    return redirect(url_for('cliente.gerenciar_clientes'))
 
 
-@veiculo_bp.route('/excluir_veiculo/<placa>')
+@cliente_bp.route('/excluir_veiculo/<placa>')
 def excluir_veiculo(placa):
     """Remove um veículo"""
     if 'usuario_id' not in session:
@@ -196,4 +196,4 @@ def excluir_veiculo(placa):
     else:
         flash('Erro ao excluir veículo.', 'error')
 
-    return redirect(url_for('veiculo.gerenciar_clientes'))
+    return redirect(url_for('cliente.gerenciar_clientes'))
