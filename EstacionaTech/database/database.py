@@ -93,7 +93,7 @@ def criar_tabelas():
         telefone TEXT NOT NULL,
         email TEXT NOT NULL,
         mensalista BOOLEAN NOT NULL,
-        modalidade TEXT NOT NULL CHECK (modalidade IN ('casual', 'mensalista', 'pcd', 'idoso'))
+        modalidade TEXT NOT NULL CHECK (modalidade IN ('casual', 'pcd', 'idoso'))
     );
 
     CREATE TABLE IF NOT EXISTS Pagamento (

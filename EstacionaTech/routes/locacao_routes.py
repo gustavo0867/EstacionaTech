@@ -98,43 +98,48 @@ def registrar_saida(id_locacao):
         'valor': 0
     }
 
-    # Se a locação estiver aberta, calcular estimativa
-    if locacao[5] is None:  # Verificar se data_hora_saida está vazia
-        agora = datetime.datetime.now()
-        if entrada:
-            minutos = (agora - entrada).total_seconds() / 60
-            horas = minutos / 60
-            horas_cobradas = max(1, int(horas) + (1 if horas % 1 > 0 else 0))
-        else:
-            horas_cobradas = 1  # fallback se entrada inválida
 
-        # Buscar tarifa
+    if locacao[4] is None:  # Verificar se data_hora_saida está vazia
+        agora = datetime.datetime.now()
+        minutos_totais = 0
+        if entrada:
+            minutos_totais = (agora - entrada).total_seconds() / 60
+
+        # Buscar tarifa e tolerância
         tarifa = 5.0  # Valor padrão
+        tolerancia_minutos = 15  # Tolerância padrão de segurança
+
         try:
-            from EstacionaTech.EstacionaTech.database.database import conectar
+            from EstacionaTech.database.database import conectar
             conn = conectar()
             cursor = conn.cursor()
-            cursor.execute("SELECT valor_por_hora FROM Tarifa LIMIT 1")
+            cursor.execute("SELECT valor_por_hora, tempo_tolerancia FROM Tarifa LIMIT 1")
             result = cursor.fetchone()
             if result:
-                tarifa = result[0]
+                tarifa, tolerancia_minutos = result
             conn.close()
         except Exception as e:
-            print(f"[ERRO] Erro ao buscar tarifa: {e}")
+            print(f"[ERRO] Erro ao buscar tarifa e tolerância: {e}")
+
+        if minutos_totais <= tolerancia_minutos:
+            horas_cobradas = 0
+            valor_cobrado = 0.0
+        else:
+            horas = minutos_totais / 60
+            horas_cobradas = max(1, int(horas) + (1 if horas % 1 > 0 else 0))
+            valor_cobrado = horas_cobradas * tarifa
 
         valor_estimado = {
             'horas': horas_cobradas,
-            'valor': horas_cobradas * tarifa
+            'valor': valor_cobrado
         }
 
-    return render_template(
-        'confirmar_saida.html',
-        locacao=locacao,
-        valor_estimado=valor_estimado,
-        nome=session.get('nome')
-    )
-
-
+        return render_template(
+            'confirmar_saida.html',
+            locacao=locacao,
+            valor_estimado=valor_estimado,
+            nome=session.get('nome')
+        )
 
 @locacao_bp.route('/confirmar_saida', methods=['POST'])
 def confirmar_saida():
@@ -156,16 +161,22 @@ def confirmar_saida():
         session['usuario_id']
     )
 
-    if success and dados_pagamento:
-        # Registrar pagamento
-        PagamentoController.registrar_pagamento(
-            id_locacao=id_locacao,
-            id_operador=session['usuario_id'],
-            valor=dados_pagamento['valor'],
-            forma_pagamento=forma_pagamento
-        )
+    if success:
 
-        flash(f"Saída registrada com sucesso! Valor cobrado: R$ {dados_pagamento['valor']:.2f}", 'success')
+        if(dados_pagamento == 0):
+
+            flash("Saída registrada com sucesso! Nenhum valor foi cobrado, pois o tempo de permanência ficou dentro da tolerância.", 'success')
+
+        else:
+            # Registrar pagamento
+            PagamentoController.registrar_pagamento(
+                id_locacao=id_locacao,
+                id_operador=session['usuario_id'],
+                valor=dados_pagamento['valor'],
+                forma_pagamento=forma_pagamento
+            )
+
+            flash(f"Saída registrada com sucesso! Valor cobrado: R$ {dados_pagamento['valor']:.2f}", 'success')
     else:
         flash(message, 'error')
 
