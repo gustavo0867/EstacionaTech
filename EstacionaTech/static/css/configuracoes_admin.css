@@ -1,0 +1,33 @@
+.config-page .cards-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.config-page .uniform-card {
+    height: 300px;
+    padding: 1.5rem;
+    border-top: 4px solid var(--primary);
+}
+
+.config-page .card-icon {
+    font-size: 2.5rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.config-page .card-config {
+    border-top-color: var(--primary);
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .config-page .cards-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .config-page .cards-container {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-main container">
+    <div class="dashboard-intro">
+        <h2>Resultado do Relatório</h2>
+        <p class="dashboard-subtitle">
+            Período: {{ data_inicio }} a {{ data_fim }}
+            <span class="float-right">
+                <form method="POST" action="{{ url_for('relatorios.exportar') }}" style="display: inline;">
+                    <input type="hidden" name="data_inicio" value="{{ data_inicio }}">
+                    <input type="hidden" name="data_fim" value="{{ data_fim }}">
+                    <input type="hidden" name="tipo_relatorio" value="{{ tipo }}">
+                    <button type="submit" class="btn btn-secondary">
+                        Exportar PDF
+                    </button>
+                </form>
+            </span>
+        </p>
+    </div>
+
+    <div class="table-responsive">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Valor</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Placa</th>
+                    <th>Cliente</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in pagamentos %}
+                <tr>
+                    <td>{{ p[4].strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>R$ {{ "%.2f"|format(p[3]) }}</td>
+                    <td>{{ p[5] }}</td>
+                    <td>{{ p[7] }}</td>
+                    <td>{{ p[8] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-total">
+        <p><strong>Total Arrecadado:</strong> R$ {{ "%.2f"|format(total) }}</p>
+    </div>
+</div>
+{% endblock %}
