@@ -60,9 +60,11 @@
                                 <span><i class="fas fa-car"></i> {{ cliente.qtd_veiculos }} veículo(s)</span>
 
                                 <!-- Badges para tipo de cliente -->
-                                {% if cliente.modalidade == 'mensalista' %}
-                                <span class="badge badge-success">Mensalista</span>
-                                {% elif cliente.modalidade == 'pcd' %}
+                                {% if cliente.mensalista == 1 %}
+                                <span class="badge badge-success me-2">Mensalista</span>
+                                {% endif %}
+
+                                {% if cliente.modalidade == 'pcd' %}
                                 <span class="badge badge-info">PCD</span>
                                 {% elif cliente.modalidade == 'idoso' %}
                                 <span class="badge badge-info">Idoso</span>
@@ -71,7 +73,7 @@
                                 {% endif %}
                             </div>
                             <div class="actions">
-                                <button class="btn btn-primary" onclick="editarCliente({{ cliente.id_cliente }}, '{{ cliente.nome }}', '{{ cliente.cpf }}', '{{ cliente.telefone }}', '{{ cliente.email }}', {{ cliente.mensalista }}, '{{ cliente.modalidade }}'); event.stopPropagation();">
+                                <button class="btn btn-primary" onclick="editarCliente({{ cliente.id_cliente }}, '{{ cliente.cpf }}', '{{ cliente.nome }}', '{{ cliente.telefone }}', '{{ cliente.email }}', {{ cliente.mensalista }}, '{{ cliente.modalidade }}'); event.stopPropagation();">
                                     <i class="fas fa-edit"></i> Editar
                                 </button>
                                 {% if cliente.qtd_veiculos == 0 %}
@@ -187,7 +189,6 @@
                         <label for="modalidade">Modalidade*</label>
                         <select id="modalidade" name="modalidade" required>
                             <option value="casual">Casual</option>
-                            <option value="mensalista">Mensalista</option>
                             <option value="pcd">PCD</option>
                             <option value="idoso">Idoso</option>
                         </select>
@@ -322,7 +323,7 @@
             document.getElementById('modalidade').value = modalidade;
 
             document.getElementById('tituloModalCliente').textContent = 'Editar Cliente';
-            document.getElementById('formCliente').action = `/editar_cliente/${id}`;
+            document.getElementById('formCliente').action = `/cliente/editar_cliente/${id}`;
             document.getElementById('modalCliente').classList.add('active');
         }
 
@@ -352,7 +353,7 @@
             document.getElementById('cliente_nome').value = nomeCliente;
 
             document.getElementById('tituloModalVeiculo').textContent = 'Editar Veículo';
-            document.getElementById('formVeiculo').action = `/editar_veiculo/${placa}`;
+            document.getElementById('formVeiculo').action = `/cliente/editar_veiculo/${placa}`;
             document.getElementById('placa').readOnly = true;
             document.getElementById('modalVeiculo').classList.add('active');
         }
