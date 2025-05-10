@@ -141,7 +141,7 @@
                 <h2>Visualização de Vagas</h2>
             </div>
             <div class="dashboard-card">
-                <h3>Mapa do Estacionamento</h3>
+                <h3>Estacionamento em Tempo Real</h3>
 
                 <div class="legenda">
                     <div class="legenda-item">
@@ -165,8 +165,12 @@
                         <span>Moto</span>
                     </div>
                     <div class="legenda-item">
-                        <div class="legenda-cor" style="background-color: #007aff;"></div>
-                        <span>Van/Utilitário</span>
+                        <div class="legenda-cor" style="background-color: #00CED1;"></div>
+                        <span>Utilitário</span>
+                    </div>
+                    <div class="legenda-item">
+                        <div class="legenda-cor" style="background-color: #FFFF00;"></div>
+                        <span>Preferencial</span>
                     </div>
                 </div>
 
@@ -176,32 +180,31 @@
                     <button class="filtro-btn" data-filtro="livre">Disponíveis</button>
                     <button class="filtro-btn" data-filtro="carro">Carros</button>
                     <button class="filtro-btn" data-filtro="moto">Motos</button>
-                    <button class="filtro-btn" data-filtro="van">Vans/Utilitários</button>
+                    <button class="filtro-btn" data-filtro="utilitário">Utilitários</button>
+                    <button class="filtro-btn" data-filtro="preferencial">Preferenciais</button>
                 </div>
 
                 {% for setor in setores %}
                 <div class="setor">
-                    <h4 class="setor-titulo">{{ setor[1] }}</h4>
+                    <h4 class="setor-titulo">Setor {{ setor[0] }}</h4>
                     <div class="mapa-estacionamento">
                         {% for vaga in vagas %}
-                            {% if vaga[2] == setor[0] %}
-                                <div class="vaga vaga-{{ vaga[3] }} tipo-{{ vaga[4]|default('padrao') }}" data-status="{{ vaga[3] }}" data-tipo="{{ vaga[4]|default('padrao') }}">
-                                    <div class="status-indicator" style="background-color:
+                            {% if vaga[1] == setor[0] %}
+                                <div class="vaga vaga-{{ vaga[3] }} tipo-{{ vaga[4]|default('padrao') }}" data-status="{{ vaga[3] }}" data-tipo="{{ vaga[2]|default('padrao') }}" style="background-color:
                                         {% if vaga[3] == 'livre' %}var(--success)
                                         {% elif vaga[3] == 'ocupada' %}var(--danger)
                                         {% else %}var(--secondary){% endif %};">
+                                    <div class="status-indicator" >
                                     </div>
-                                    <span>{{ vaga[1] }}</span>
+                                    <span>{{ vaga[0] }}</span>
                                     <div class="vaga-tipo" style="background-color:
-                                        {% if vaga[4] == 'carro' %}#ff9500
-                                        {% elif vaga[4] == 'moto' %}#5856d6
-                                        {% elif vaga[4] == 'van' %}#007aff
-                                        {% else %}#34c759{% endif %};">
-                                        {{ vaga[4]|default('Padrão')|capitalize }}
+                                        {% if vaga[2] == 'carro' %}#ff9500
+                                        {% elif vaga[2] == 'moto' %}#5856d6
+                                        {% elif vaga[2] == 'preferencial' %}#FFFF00
+                                        {% else %}#00CED1{% endif %};">
+                                        {{ vaga[2]|default('Padrão')|capitalize }}
                                     </div>
-                                    <div class="vaga-info">
-                                        {% if vaga[5] %}Cobertura: Sim{% else %}Cobertura: Não{% endif %}
-                                    </div>
+
                                 </div>
                             {% endif %}
                         {% endfor %}

@@ -48,7 +48,7 @@ def criar_tabelas():
     CREATE TABLE IF NOT EXISTS Vaga (
         id_vaga TEXT PRIMARY KEY,
         setor TEXT NOT NULL,
-        tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'deficiente', 'etc.')),
+        tipo TEXT NOT NULL CHECK (tipo IN ('carro', 'moto', 'utilitário', 'preferencial')),
         status TEXT NOT NULL CHECK (status IN ('livre', 'ocupada', 'reservada', 'manutenção')),
         FOREIGN KEY (setor) REFERENCES Setor(id_setor)
     );
