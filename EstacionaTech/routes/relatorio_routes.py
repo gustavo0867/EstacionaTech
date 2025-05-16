@@ -14,7 +14,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash, send_file
 from datetime import datetime
 from io import BytesIO
-from EstacionaTech.controllers.relatorio_controller import Relatorio
+from EstacionaTech.controllers.relatorio_controller import RelatorioController
 #from EstacionaTech.relatorios.gerador_pdf import gerar_pdf_relatorio_operacional, gerar_pdf_relatorio_financeiro
 
 relatorio_bp = Blueprint('relatorio', __name__, template_folder='../templates')
@@ -41,6 +41,19 @@ def gerar_relatorios():
             flash('Datas inválidas. Use o formato YYYY-MM-DD.')
             return redirect(url_for('relatorio.gerar_relatorios'))
 
-        relatorio = Relatorio()
+        controller = RelatorioController()
+
+        if tipo_relatorio == "operacional_locacoes":
+            buffer = controller.obter_relatorio_locacoes(data_inicio_str, data_fim_str)
+            return send_file(buffer, as_attachment=True, download_name="relatorio_op_locacoes.pdf", mimetype='application/pdf')
+
+        if tipo_relatorio == "operacional_geral":
+            buffer = controller.obter_relatorio_operacional(data_inicio_str, data_fim_str)
+            return send_file(buffer, as_attachment=True, download_name="relatorio_op_geral.pdf", mimetype='application/pdf')
+
+        if tipo_relatorio == "financeiro_geral":
+            buffer = controller.obter_relatorio_financeiro(data_inicio_str, data_fim_str)
+            return send_file(buffer, as_attachment=True, download_name="relatorio_fin_geral.pdf", mimetype='application/pdf')
+
 
     return render_template('relatorios.html', nome=session['nome'])
