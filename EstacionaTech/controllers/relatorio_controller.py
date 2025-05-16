@@ -1,7 +1,6 @@
 from EstacionaTech.models.relatorio import Relatorio
 from datetime import datetime
-from services.gerador_pdf import relatorio_locacoes, relatorio_operacional, relatorio_financeiro
-
+from EstacionaTech.EstacionaTech.services.gerador_pdf import relatorio_locacoes, relatorio_operacional, relatorio_financeiro
 class RelatorioController:
     def __init__(self):
         self.relatorio_model = Relatorio()
