@@ -20,8 +20,8 @@ from EstacionaTech.controllers.relatorio_controller import Relatorio
 relatorio_bp = Blueprint('relatorio', __name__, template_folder='../templates')
 
 @relatorio_bp.route('/gerar_relatorios', methods=['GET', 'POST'])
-def relatorios():
-    print("Entrou!!!")
+def gerar_relatorios():
+
     if 'usuario_id' not in session or session['tipo'] != 'administrador':
         return redirect(url_for('auth.login'))
 
@@ -42,24 +42,5 @@ def relatorios():
             return redirect(url_for('relatorio.gerar_relatorios'))
 
         relatorio = Relatorio()
-
-        # buffer = BytesIO()
-        #
-        # if tipo_relatorio == 'operacional':
-        #     dados = relatorio.listar_infos_operacionais_relevantes(data_inicio, data_fim)
-        #     gerar_pdf_relatorio_operacional(buffer, dados, data_inicio, data_fim)
-        #
-        # elif tipo_relatorio == 'financeiro':
-        #     dados = relatorio.listar_infos_financeiras_relevantes(data_inicio, data_fim)
-        #     faturamento_total = relatorio.calc_faturamento_total(data_inicio, data_fim)
-        #     gerar_pdf_relatorio_financeiro(buffer, dados, data_inicio, data_fim, faturamento_total)
-        #
-        # else:
-        #     flash('Tipo de relatório inválido.')
-        #     return redirect(url_for('admin.relatorios'))
-        #
-        # buffer.seek(0)
-        # nome_arquivo = f"{tipo_relatorio}_relatorio_{data_inicio.date()}_{data_fim.date()}.pdf"
-        # return send_file(buffer, as_attachment=True, download_name=nome_arquivo, mimetype='application/pdf')
 
     return render_template('relatorios.html', nome=session['nome'])
