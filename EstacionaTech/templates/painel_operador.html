@@ -5,38 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Operador - EstacionaTech</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visualizar_vagas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <nav class="dashboard-nav container">
-                <h1 class="dashboard-title">EstacionaTech</h1>
-                <div class="dashboard-user">
-                    <span>{{ nome }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
-                </div>
-            </nav>
-        </header>
-        <main class="dashboard-content container">
-            <h2>Painel do Operador</h2>
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Entrada e Saída</h3>
-                    <p>Registre entradas e saídas de veículos no estacionamento.</p>
-                    <a href="{{ url_for('locacao.operacoes') }}" class="btn btn-primary">Acessar</a>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Consultar Vagas</h3>
-                    <p>Visualize as vagas disponíveis no estacionamento.</p>
-                    <a href="{{ url_for('vaga.visualizar_vagas') }}" class="btn btn-primary">Acessar</a>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Gerenciar Clientes</h3>
-                    <p>Cadastre, edite e remova clientes e seus veículos.</p>
-                    <a href="{{ url_for('cliente.gerenciar_clientes') }}" class="btn btn-primary">Acessar</a>
+    <div class="dashboard painel-operador">
+       <header class="dashboard-header">
+           <nav class="dashboard-nav container">
+               <h1 class="dashboard-title">EstacionaTech</h1>
+               <div class="dashboard-user">
+                   <span>{{ nome }}</span>
+                   <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
+               </div>
+           </nav>
+       </header>
+       <main class="dashboard-content container operador-layout">
+           <h2>Painel do Operador</h2>
+           <div class="painel-wrapper">
+               <div class="painel-esquerdo">
+                   <div class="dashboard-card">
+                       <h3>Entrada e Saída</h3>
+                       <p>Registre entradas e saídas de veículos no estacionamento.</p>
+                       <a href="{{ url_for('locacao.operacoes') }}" class="btn btn-primary">Acessar</a>
+                   </div>
+                   <div class="dashboard-card">
+                       <h3>Gerenciar Clientes</h3>
+                       <p>Cadastre, edite e remova clientes e seus veículos.</p>
+                       <a href="{{ url_for('cliente.gerenciar_clientes') }}" class="btn btn-primary">Acessar</a>
+                   </div>
+               </div>
+
+               <div class="painel-direito">
+                   <div class="dashboard-card visualizacao-vagas-card">
+                       <h3>Visualização de Vagas</h3>
+
+                       <div class="legenda">
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--success);"></div><span>Livre</span></div>
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--danger);"></div><span>Ocupada</span></div>
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: var(--secondary);"></div><span>Em Manutenção</span></div>
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: #ff9500;"></div><span>Carro</span></div>
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: #5856d6;"></div><span>Moto</span></div>
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: #00CED1;"></div><span>Utilitário</span></div>
+                           <div class="legenda-item"><div class="legenda-cor" style="background-color: #FFFF00;"></div><span>Preferencial</span></div>
+                       </div>
+
+                       <div class="filtros">
+                           <span><strong>Filtrar por:</strong></span>
+                           <button class="filtro-btn active" data-filtro="todos">Todos</button>
+                           <button class="filtro-btn" data-filtro="livre">Disponíveis</button>
+                           <button class="filtro-btn" data-filtro="carro">Carros</button>
+                           <button class="filtro-btn" data-filtro="moto">Motos</button>
+                           <button class="filtro-btn" data-filtro="utilitário">Utilitários</button>
+                           <button class="filtro-btn" data-filtro="preferencial">Preferenciais</button>
+                       </div>
+
+                       {% for setor in setores %}
+                       <div class="setor">
+                           <h4 class="setor-titulo">Setor {{ setor[0] }}</h4>
+                           <div class="mapa-estacionamento">
+                               {% for vaga in vagas %}
+                                   {% if vaga[1] == setor[0] %}
+                                       <div class="vaga vaga-{{ vaga[3] }} tipo-{{ vaga[4]|default('padrao') }}" data-status="{{ vaga[3] }}" data-tipo="{{ vaga[2]|default('padrao') }}">
+                                           <div class="status-indicator"></div>
+                                           <span class="vaga-id">{{ vaga[0] }}</span>
+                                           <div class="vaga-icone">
+                                               {% if vaga[2] == 'carro' %}
+                                                  <i class="fa-solid fa-car"></i>
+                                               {% elif vaga[2] == 'moto' %}
+                                                  <i class="fa-solid fa-motorcycle"></i>
+                                               {% elif vaga[2] == 'utilitário' %}
+                                                  <i class="fa-solid fa-truck"></i>
+                                               {% elif vaga[2] == 'preferencial' %}
+                                                  <i class="fa-solid fa-wheelchair"></i>
+                                               {% else %}
+                                                  <i class="fa-solid fa-square-parking"></i>
+                                               {% endif %}
+                                            </div>
+                                           <div class="vaga-tipo" style="background-color:
+                                               {% if vaga[2] == 'carro' %}#ff9500
+                                               {% elif vaga[2] == 'moto' %}#5856d6
+                                               {% elif vaga[2] == 'preferencial' %}#FFFF00
+                                               {% else %}#00CED1{% endif %};">
+                                               {{ vaga[2]|default('Padrão')|capitalize }}
+                                           </div>
+                                       </div>
+                                   {% endif %}
+                               {% endfor %}
+                           </div>
+                       </div>
+                       {% endfor %}
+
+                       {% if not setores %}<p>Nenhum setor cadastrado.</p>{% endif %}
+                       {% if not vagas %}<p>Nenhuma vaga cadastrada.</p>{% endif %}
+                   </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroBtns = document.querySelectorAll('.filtro-btn');
+            const vagas = document.querySelectorAll('.vaga');
+
+            filtroBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filtroBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    const filtro = this.getAttribute('data-filtro');
+
+                    // Show/hide vagas based on filter
+                    vagas.forEach(vaga => {
+                        const status = vaga.getAttribute('data-status');
+                        const tipo = vaga.getAttribute('data-tipo');
+
+                        if (filtro === 'todos') {
+                            vaga.style.display = 'flex';
+                        } else if (filtro === 'livre' && status === 'livre') {
+                            vaga.style.display = 'flex';
+                        } else if (filtro === tipo) {
+                            vaga.style.display = 'flex';
+                        } else {
+                            vaga.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>

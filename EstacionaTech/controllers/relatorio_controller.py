@@ -1,6 +1,6 @@
 from EstacionaTech.models.relatorio import Relatorio
 from datetime import datetime
-
+from EstacionaTech.EstacionaTech.services.gerador_pdf import relatorio_locacoes, relatorio_operacional, relatorio_financeiro
 class RelatorioController:
     def __init__(self):
         self.relatorio_model = Relatorio()
@@ -11,18 +11,16 @@ class RelatorioController:
             return {"erro": "Datas inválidas"}
 
         locacoes = self.relatorio_model.listar_locacoes_no_periodo(data_inicio, data_fim)
-        return {"dados": locacoes}
+        return relatorio_locacoes(locacoes, data_inicio_str, data_fim_str)
 
     def obter_relatorio_operacional(self, data_inicio_str: str, data_fim_str: str):
         data_inicio, data_fim = self.validar_datas(data_inicio_str, data_fim_str)
         if not data_inicio:
             return {"erro": "Datas inválidas"}
 
-        vagas, tempo_medio = self.relatorio_model.listar_infos_operacionais_relevantes(data_inicio, data_fim)
-        return {
-            "vagas_mais_utilizadas": vagas,
-            "tempo_medio_permanencia": tempo_medio
-        }
+        vagas = self.relatorio_model.listar_vagas_mais_utlizadas(data_inicio, data_fim)
+        tempo_medio = self.relatorio_model.calcular_tempo_medio_permanencia(data_inicio, data_fim)
+        return relatorio_operacional(vagas, tempo_medio, data_inicio_str, data_fim_str)
 
     def obter_relatorio_financeiro(self, data_inicio_str: str, data_fim_str: str):
         data_inicio, data_fim = self.validar_datas(data_inicio_str, data_fim_str)
@@ -30,14 +28,10 @@ class RelatorioController:
             return {"erro": "Datas inválidas"}
 
         faturamento_total = self.relatorio_model.faturamento_total(data_inicio, data_fim)
-        faturamento_diario = self.relatorio_model.faturamento_por_dia(data_inicio, data_fim)
+        faturamento_por_dia = self.relatorio_model.faturamento_por_dia(data_inicio, data_fim)
         media_diaria = self.relatorio_model.media_diaria_faturamento(data_inicio, data_fim)
         #round(faturamento_total / ((data_fim - data_inicio).days or 1), 2)
-        return {
-            "faturamento_total": faturamento_total,
-            "faturamento_diario": faturamento_diario,
-            "media_diaria": media_diaria
-        }
+        return relatorio_financeiro(faturamento_total, faturamento_por_dia, media_diaria, data_inicio_str, data_fim_str)
 
     def validar_datas(self, data_inicio_str, data_fim_str):
         try:

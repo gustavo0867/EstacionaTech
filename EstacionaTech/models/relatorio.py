@@ -25,40 +25,52 @@ class Relatorio:
         finally:
             conn.close()
 
-    def listar_infos_operacionais_relevantes(self, data_inicio: datetime, data_fim: datetime):
+    def listar_vagas_mais_utlizadas(self, data_inicio: datetime, data_fim: datetime):
         conn = conectar()
         cursor = conn.cursor()
 
         #Lista as vagas mais utilizadas do estacionamento
-        query_vagas = """
+        query = """
             SELECT id_vaga, COUNT(id_vaga) AS qtd_uso
             FROM locacao
             WHERE data_hora_entrada >= ? AND data_hora_entrada <= ?
             GROUP BY id_vaga
             ORDER BY qtd_uso DESC
             """
-
-        #Calcula o tempo médio de permanência no estacionamento
-        query_tempo_medio = """
-            SELECT AVG(strftime('%s', locacao.data_hora_saida) - strftime('%s', locacao.data_hora_entrada)) AS tempo_medio
-            FROM locacao
-            WHERE locacao.data_hora_saida >= ? AND locacao.data_hora_saida <= ?
-            """
-            #JOIN saida ON entrada.id = saida.entrada_id
         try:
-            cursor.execute(query_vagas, (data_inicio, data_fim))
-            cursor.execute(query_tempo_medio, (data_inicio, data_fim))
+            cursor.execute(query, (data_inicio, data_fim))
             vagas = cursor.fetchall()
-            tempo_medio = cursor.fetchone()
             conn.commit()
 
-            return vagas, tempo_medio[0] if tempo_medio else None
+            return vagas
         except sqlite3.Error as e:
             print(f"Erro ao realizar consulta ao banco de dados: {e}")
             return False
         finally:
             conn.close()
 
+    def calcular_tempo_medio_permanencia(self, data_inicio: datetime, data_fim: datetime):
+        conn = conectar()
+        cursor = conn.cursor()
+
+        #Calcula o tempo médio de permanência no estacionamento
+        query = """
+            SELECT AVG(strftime('%s', locacao.data_hora_saida) - strftime('%s', locacao.data_hora_entrada)) AS tempo_medio
+            FROM locacao
+            WHERE locacao.data_hora_saida >= ? AND locacao.data_hora_saida <= ?
+            """
+            #JOIN saida ON entrada.id = saida.entrada_id
+        try:
+            cursor.execute(query, (data_inicio, data_fim))
+            tempo_medio = cursor.fetchone()
+            conn.commit()
+
+            return tempo_medio[0] if tempo_medio else None
+        except sqlite3.Error as e:
+            print(f"Erro ao realizar consulta ao banco de dados: {e}")
+            return False
+        finally:
+            conn.close()
 
     # def tempo_medio_permanencia(self, data_inicio: datetime, data_fim: datetime):
     #     query = """

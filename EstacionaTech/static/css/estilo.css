@@ -213,3 +213,101 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Painel operador layout */
+.painel-operador {
+   max-width: 1300px;
+   margin: 0 auto;
+}
+
+.painel-wrapper {
+   display: flex;
+   gap: 2rem;
+   flex-wrap: wrap;
+}
+
+.painel-esquerdo,
+.painel-direito {
+   flex: 1 1 45%;
+   display: flex;
+   flex-direction: column;
+   gap: 2rem;
+}
+
+.visualizacao-vagas-card {
+   max-height: 80vh;
+   overflow-y: auto;
+}
+
+.mapa-estacionamento {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+}
+
+.vaga {
+   width: 90px;
+   height: 90px;
+   border-radius: 6px;
+   padding: 5px;
+   font-size: 0.75rem;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+   text-align: center;
+}
+
+.vaga-id {
+   font-weight: bold;
+   margin-bottom: 4px;
+}
+
+.vaga-icone i {
+   font-size: 1.5rem;
+   color: #333;
+}
+
+.vaga {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 4px;
+   padding: 5px;
+   text-align: center;
+   height: 90px;
+   width: 90px;
+   background-color: #f8f8f8;
+   border-radius: 8px;
+   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.setor {
+   margin-bottom: 20px;
+}
+
+.setor-titulo {
+   font-size: 1rem;
+   font-weight: bold;
+   margin-bottom: 8px;
+}
+
+.visualizacao-vagas-card .legenda,
+.visualizacao-vagas-card .filtros {
+   flex-wrap: wrap;
+}
+
+@media (max-width: 992px) {
+   .painel-wrapper {
+       flex-direction: column;
+   }
+
+   .painel-esquerdo,
+   .painel-direito {
+       flex: 1 1 100%;
+   }
+
+}

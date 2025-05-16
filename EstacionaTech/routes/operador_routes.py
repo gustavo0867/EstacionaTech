@@ -1,3 +1,5 @@
+from controllers.setor_controller import SetorController
+from controllers.vaga_controller import VagaController
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash
 from EstacionaTech.models.operador import Operador
@@ -6,7 +8,9 @@ operador_bp = Blueprint('operadores', __name__, template_folder='../templates')
 
 @operador_bp.route('/painel_operador')
 def painel_operador():
-    return render_template('painel_operador.html', nome=session['nome'])
+    vagas = VagaController.listar_vagas()
+    setores = SetorController.listar_setores()
+    return render_template('painel_operador.html', vagas=vagas, setores=setores, nome=session.get('nome'))
 
 @operador_bp.route('/config_operadores', methods=['GET', 'POST'])
 def config_operadores():
