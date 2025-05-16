@@ -13,7 +13,7 @@ def painel_admin():
 def configuracoes_admin():
     return render_template('configuracoes_admin.html')
 
-# @admin_bp.route('/relatorios')
-# def relatorios_admin():
-#     return render_template('relatorios.html')
+@admin_bp.route('/relatorios')
+def relatorios():
+    return render_template('relatorios.html')
 

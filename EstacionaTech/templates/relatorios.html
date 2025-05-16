@@ -60,6 +60,19 @@
             margin-bottom: 10px;
             color: #666;
         }
+
+        .data-range {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .data-field {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -71,33 +84,32 @@
 
         <h1>Relatórios do Sistema</h1>
 
-        <form method="POST" action="{{ url_for('admin.relatorios') }}">
-            <label for="data_inicio">Data de Início:</label>
-            <input type="date" name="data_inicio" required>
-
-            <label for="data_fim">Data de Fim:</label>
-            <input type="date" name="data_fim" required>
+        <form method="POST" action="{{ url_for('relatorio.gerar_relatorios') }}">
+            <div class="data-range">
+                <div class="data-field">
+                    <label for="data_inicio">Data de Início:</label>
+                    <input type="date" name="data_inicio" required>
+                </div>
+                <div class="data-field">
+                    <label for="data_fim">Data de Fim:</label>
+                    <input type="date" name="data_fim" required>
+                </div>
+            </div>
 
             <div class="section">
                 <h2>Relatórios Operacionais</h2>
-                <button class="btn" type="submit" name="tipo_relatorio" value="operacional_ocupacao">
-                    Ocupação de Vagas
+                <button class="btn" type="submit" name="tipo_relatorio" value="operacional_locacoes">
+                    Relatório de Locações
                 </button>
-                <button class="btn" type="submit" name="tipo_relatorio" value="operacional_tempo_medio">
-                    Tempo Médio de Permanência
-                </button>
-                <button class="btn" type="submit" name="tipo_relatorio" value="operacional_fluxo">
-                    Fluxo de Veículos
+                <button class="btn" type="submit" name="tipo_relatorio" value="operacional_geral">
+                    Relatorio Operacional Geral
                 </button>
             </div>
 
             <div class="section">
                 <h2>Relatórios Financeiros</h2>
-                <button class="btn" type="submit" name="tipo_relatorio" value="financeiro_diario">
-                    Faturamento Diário
-                </button>
-                <button class="btn" type="submit" name="tipo_relatorio" value="financeiro_total">
-                    Faturamento Total
+                <button class="btn" type="submit" name="tipo_relatorio" value="financeiro_geral">
+                    Relatório Financeiro Geral
                 </button>
             </div>
         </form>
