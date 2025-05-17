@@ -10,13 +10,17 @@
 :root {
   --primary: #2563eb;
   --primary-dark: #1d4ed8;
-  --secondary: #A9A9A9;
+  --secondary: #64748b;
   --danger: #ef4444;
   --success: #22c55e;
   --background: #f8fafc;
   --surface: #ffffff;
   --text: #0f172a;
   --text-light: #64748b;
+  --primary-light: #93c5fd;
+  --secondary: #4f46e5;
+  --accent: #10b981;
+  --card-bg: #ffffff;
 }
 
 body {
@@ -117,10 +121,33 @@ body {
   grid-template-rows: auto 1fr;
 }
 
+.dashboard-main {
+    padding: 2rem 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.dashboard-subtitle {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
 .dashboard-header {
   background: var(--surface);
   padding: 1rem;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.dashboard-header-content {
+    text-align: center;
+    margin-bottom: 2.5rem;
 }
 
 .dashboard-nav {
@@ -152,21 +179,42 @@ body {
   margin-bottom: 2rem;
 }
 
+.dashboard-subtitle {
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+    margin-top: 1rem;
+    min-height: 60vh; /* Ocupa mais espaço vertical */
+    align-content: center; /* Centraliza verticalmente */
 }
 
 .dashboard-card {
-    background-color: var(--surface); /* Alterado para var(--surface) para usar a cor definida */
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex; /* Adicionado para usar flexbox */
-    flex-direction: column; /* Organizar os itens verticalmente */
-    align-items: center; /* Centralizar horizontalmente */
-    text-align: center; /* Centralizar o texto */
+    background-color: var(--card-bg);
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card:hover .card-icon {
+    transform: scale(1.1);
 }
 
 .dashboard-card h3 {
@@ -190,6 +238,45 @@ body {
     justify-content: center;
 }
 
+.card-icon {
+    font-size: 3rem;
+    margin: 1.5rem 0;
+    opacity: 0.9;
+}
+
+.card-config {
+    background: linear-gradient(135deg, #f0f9ff 0%, var(--primary-light) 100%);
+    border-left: 4px solid var(--primary);
+}
+
+.card-reports {
+    background: linear-gradient(135deg, #eef2ff 0%, #c7d2fe 100%);
+    border-left: 4px solid var(--secondary);
+}
+
+.card-clients {
+    background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 100%);
+    border-left: 4px solid var(--accent);
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    flex-grow: 1;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #4338ca;
+}
+
 .alert {
   padding: 1rem;
   border-radius: 6px;
@@ -202,112 +289,66 @@ body {
   border: 1px solid #fecaca;
 }
 
+.uniform-card {
+    background: var(--surface);
+    height: 400px; /* Altura fixa e generosa */
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-top: 4px solid var(--primary);
+}
+
+.uniform-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.uniform-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.uniform-card p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    color: var(--text-light);
+    flex-grow: 1;
+    max-width: 280px;
+}
+
+.uniform-card .btn {
+    width: 80%;
+    padding: 0.8rem;
+    font-size: 1.05rem;
+}
+
 @media (max-width: 992px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .cards-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .uniform-card {
+        height: 360px;
+        padding: 2.5rem 1.5rem;
+    }
 }
 
 @media (max-width: 600px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-}
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 
-/* Painel operador layout */
-.painel-operador {
-   max-width: 1300px;
-   margin: 0 auto;
-}
-
-.painel-wrapper {
-   display: flex;
-   gap: 2rem;
-   flex-wrap: wrap;
-}
-
-.painel-esquerdo,
-.painel-direito {
-   flex: 1 1 45%;
-   display: flex;
-   flex-direction: column;
-   gap: 2rem;
-}
-
-.visualizacao-vagas-card {
-   max-height: 80vh;
-   overflow-y: auto;
-}
-
-.mapa-estacionamento {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 10px;
-}
-
-.vaga {
-   width: 90px;
-   height: 90px;
-   border-radius: 6px;
-   padding: 5px;
-   font-size: 0.75rem;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
-   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-   text-align: center;
-}
-
-.vaga-id {
-   font-weight: bold;
-   margin-bottom: 4px;
-}
-
-.vaga-icone i {
-   font-size: 1.5rem;
-   color: #333;
-}
-
-.vaga {
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
-   gap: 4px;
-   padding: 5px;
-   text-align: center;
-   height: 90px;
-   width: 90px;
-   background-color: #f8f8f8;
-   border-radius: 8px;
-   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-
-.setor {
-   margin-bottom: 20px;
-}
-
-.setor-titulo {
-   font-size: 1rem;
-   font-weight: bold;
-   margin-bottom: 8px;
-}
-
-.visualizacao-vagas-card .legenda,
-.visualizacao-vagas-card .filtros {
-   flex-wrap: wrap;
-}
-
-@media (max-width: 992px) {
-   .painel-wrapper {
-       flex-direction: column;
-   }
-
-   .painel-esquerdo,
-   .painel-direito {
-       flex: 1 1 100%;
-   }
-
+    .uniform-card {
+        height: 320px;
+        padding: 2rem 1.5rem;
+    }
 }
