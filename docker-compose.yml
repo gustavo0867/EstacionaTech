@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  estacionatech:
+    build: .
+    container_name: estacionatech_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_ENV=development
+    restart: unless-stopped

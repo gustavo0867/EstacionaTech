@@ -1,5 +1,5 @@
-from controllers.setor_controller import SetorController
-from controllers.vaga_controller import VagaController
+from EstacionaTech.controllers.setor_controller import SetorController
+from EstacionaTech.controllers.vaga_controller import VagaController
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash
 from EstacionaTech.models.operador import Operador
