@@ -14,13 +14,12 @@ RUN pip install --upgrade pip \
 # Copia o restante do projeto
 COPY . .
 
-# Exponha a porta do Flask
+# Porta exposta
 EXPOSE 5000
 
 # Variáveis de ambiente
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_ENV=development
+ENV FLASK_DEBUG=1
 
-# Comando pra rodar
-CMD ["flask", "run"]
+# Comando para rodar
+CMD ["python", "app.py"]

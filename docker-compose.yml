@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   estacionatech:
     build: .
@@ -9,7 +7,6 @@ services:
     volumes:
       - .:/app
     environment:
-      - FLASK_APP=app.py
-      - FLASK_RUN_HOST=0.0.0.0
       - FLASK_ENV=development
+      - FLASK_DEBUG=1
     restart: unless-stopped

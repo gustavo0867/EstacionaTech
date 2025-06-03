@@ -19,6 +19,8 @@ from EstacionaTech.routes.relatorio_routes import relatorio_bp
 app = Flask(__name__, static_folder='EstacionaTech/static', template_folder='EstacionaTech/templates')
 app.secret_key = 'chave_secreta_super_segura'
 
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
 
 # Definindo rota principal
 @app.route('/')
@@ -40,4 +42,4 @@ app.register_blueprint(relatorio_bp, url_prefix='/relatorio')
 
 
 if __name__ == '__main__':
-   app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
