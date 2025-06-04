@@ -1,6 +1,7 @@
 from EstacionaTech.database.database import conectar
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 class Relatorio:
 
@@ -85,6 +86,71 @@ class Relatorio:
     #     resultado = cursor.fetchone()
     #     conn.close()
     #     return resultado[0] if resultado else None
+
+    def calcular_procura_por_horario(self, data_inicio: datetime, data_fim: datetime):
+        conn = conectar()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT data_hora_entrada, data_hora_saida
+            FROM locacao
+            WHERE data_hora_entrada >= ? AND data_hora_entrada <= ?
+            """
+        try:
+            cursor.execute(query, (data_inicio, data_fim))
+            locacoes = cursor.fetchall()
+            conn.commit()
+
+            # Inicialização de contador para as faixas
+            faixas = {
+                'Madrugada (00h-06h)': 0,
+                'Manhã (06h-12h)': 0,
+                'Tarde (12h-18h)': 0,
+                'Noite (18h-00h)': 0
+            }
+
+            # Para cada locação
+            # for loc in locacoes:
+            #     print(f"Tuple recebida: {loc} com {len(loc)} elementos", flush = True)
+
+            for entrada, saida in locacoes:
+                if isinstance(entrada, str):
+                    entrada = datetime.fromisoformat(entrada)
+                if saida is not None:
+                    if isinstance(saida, str):
+                        saida = datetime.fromisoformat(saida)
+                else:
+                    saida = data_fim.replace(hour=23, minute=59)#saída em aberto, estabelece um limite igual à data fim para gerar o relatório do status naquele momento
+
+                print(f"Entrada: {entrada} ({type(entrada)}), Saída: {saida} ({type(saida)})", flush=True)
+
+
+
+                hora_atual = entrada
+                while hora_atual < saida:
+                    print(f"****hora_atual: {hora_atual} - ({type(hora_atual)}) || saida: {saida} - ({type(saida)})", flush = True)
+                    hora = hora_atual.hour
+                    if 0 <= hora < 6:
+                        faixas['Madrugada (00h-06h)'] += 1
+                    elif 6 <= hora < 12:
+                        faixas['Manhã (06h-12h)'] += 1
+                    elif 12 <= hora < 18:
+                        faixas['Tarde (12h-18h)'] += 1
+                    else:
+                        faixas['Noite (18h-00h)'] += 1
+                    hora_atual += timedelta(hours=1)
+
+            maior_movimento = max(faixas, key=faixas.get)
+            menor_movimento = min(faixas, key=faixas.get)
+
+
+            return maior_movimento, menor_movimento
+        except sqlite3.Error as e:
+            print(f"Erro ao realizar consulta ao banco de dados: {e}")
+            return False
+        finally:
+            conn.close()
+
     def faturamento_total(self, data_inicio: datetime, data_fim: datetime):
         conn = conectar()
         cursor = conn.cursor()
