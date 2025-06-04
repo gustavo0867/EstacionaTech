@@ -20,7 +20,8 @@ class RelatorioController:
 
         vagas = self.relatorio_model.listar_vagas_mais_utlizadas(data_inicio, data_fim)
         tempo_medio = self.relatorio_model.calcular_tempo_medio_permanencia(data_inicio, data_fim)
-        return relatorio_operacional(vagas, tempo_medio, data_inicio_str, data_fim_str)
+        maior_movimento, menor_movimento = self.relatorio_model.calcular_procura_por_horario(data_inicio, data_fim)
+        return relatorio_operacional(vagas, tempo_medio, maior_movimento, menor_movimento, data_inicio_str, data_fim_str)
 
     def obter_relatorio_financeiro(self, data_inicio_str: str, data_fim_str: str):
         data_inicio, data_fim = self.validar_datas(data_inicio_str, data_fim_str)

@@ -61,7 +61,7 @@ def relatorio_locacoes(locacoes: list, data_inicio, data_fim):
     buffer.seek(0)
     return buffer
 
-def relatorio_operacional(vagas, tempo_medio, data_inicio, data_fim):
+def relatorio_operacional(vagas, tempo_medio, maior_movimento, menor_movimento, data_inicio, data_fim):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, leftMargin=35, rightMargin=40, topMargin=40, bottomMargin=40)
     elementos = []
@@ -76,18 +76,18 @@ def relatorio_operacional(vagas, tempo_medio, data_inicio, data_fim):
     elementos.append(titulo_vagas)
 
     # Cabeçalho da tabela
-    dados_tabela = [
+    dados_tabela_vagas = [
         ['ID Vaga', 'Qtde. de Utilização']
     ]
 
     for vaga in vagas:
-        dados_tabela.append([
+        dados_tabela_vagas.append([
             str(vaga[0]),
             str(vaga[1]) #qtde de uso
         ])
 
-    tabela = Table(dados_tabela, repeatRows=1, colWidths=[3 * cm, 3 * cm])
-    tabela.setStyle(TableStyle([
+    tabela_vagas = Table(dados_tabela_vagas, repeatRows=1, colWidths=[3 * cm, 3 * cm])
+    tabela_vagas.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
@@ -96,12 +96,40 @@ def relatorio_operacional(vagas, tempo_medio, data_inicio, data_fim):
         ('FONTSIZE', (0, 0), (-1, -1), 9),
     ]))
 
-    elementos.append(tabela)
+    elementos.append(tabela_vagas)
 
     titulo_tempo_medio = Paragraph("Tempo Médio de Permanência no Estacionamento: ", styles['Heading4'])
     elementos.append(titulo_tempo_medio)
     info_tempo_medio = Paragraph(str(tempo_medio))
     elementos.append(info_tempo_medio)
+
+    titulo_movimento_horarios = Paragraph("Movimento nas Faixas de Horário: ", styles['Heading4'])
+    elementos.append(titulo_movimento_horarios)
+
+    # Cabeçalho da tabela de HORÁRIOS
+    dados_tabela_horarios = [
+        ['Faixa de Horário c/ MAIOR Movimento', 'Faixa de Horário c/ MENOR Movimento']
+    ]#como add chave ssh do ubuntu wsl no github
+
+
+    dados_tabela_horarios.append([
+        maior_movimento,
+        menor_movimento
+    ])
+
+    tabela_horarios = Table(dados_tabela_horarios, repeatRows=1, colWidths=[6 * cm, 6 * cm])
+    tabela_horarios.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+    ]))
+
+    elementos.append(tabela_horarios)
+
+
 
     doc.build(elementos)
 
