@@ -5,6 +5,7 @@ from collections import defaultdict
 
 class Relatorio:
 
+    # //// RELATÓRIOS OPERACIONAIS ////
     def listar_locacoes_no_periodo(self, data_inicio: datetime, data_fim: datetime):
         conn = conectar()
         cursor = conn.cursor()
@@ -124,8 +125,6 @@ class Relatorio:
 
                 print(f"Entrada: {entrada} ({type(entrada)}), Saída: {saida} ({type(saida)})", flush=True)
 
-
-
                 hora_atual = entrada
                 while hora_atual < saida:
                     print(f"****hora_atual: {hora_atual} - ({type(hora_atual)}) || saida: {saida} - ({type(saida)})", flush = True)
@@ -143,7 +142,6 @@ class Relatorio:
             maior_movimento = max(faixas, key=faixas.get)
             menor_movimento = min(faixas, key=faixas.get)
 
-
             return maior_movimento, menor_movimento
         except sqlite3.Error as e:
             print(f"Erro ao realizar consulta ao banco de dados: {e}")
@@ -151,6 +149,79 @@ class Relatorio:
         finally:
             conn.close()
 
+    def listar_mensalistas(self):#, data_inicio: datetime, data_fim: datetime
+        conn = conectar()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id_cliente, cpf, nome, telefone, email, modalidade
+            FROM cliente
+            WHERE mensalista = TRUE
+        """
+
+        try:
+            cursor.execute(query)
+            resultado = cursor.fetchall()
+            conn.commit()
+
+            return resultado
+        except sqlite3.Error as e:
+            print(f"Erro ao realizar consulta ao banco de dados: {e}")
+        finally:
+            conn.close()
+
+    def listar_clientes_com_mais_veiculos(self):
+        conn = conectar()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT c.id_cliente, c.cpf, c.nome, c.telefone, c.email, c.mensalista, c.modalidade, COUNT(v.id_cliente) as qtde_veiculos
+            FROM cliente c
+            INNER JOIN veiculo v 
+            ON c.id_cliente = v.id_cliente
+            GROUP BY c.id_cliente
+            ORDER BY qtde_veiculos DESC
+            LIMIT 10
+            """
+        try:
+            cursor.execute(query)
+            resultado = cursor.fetchall()
+            conn.commit()
+
+            return resultado
+        except sqlite3.Error as e:
+            print(f"Erro ao realizar consulta ao banco de dados: {e}")
+        finally:
+            conn.close()
+
+    def listar_clientes_frequentes(self):
+        conn = conectar()
+        cursor = conn.cursor()
+
+        query = """
+            SELECT c.id_cliente, c.cpf, c.nome, c.telefone, c.email, c.mensalista, c.modalidade,
+            COUNT(l.id_locacao) AS total_locacoes
+            FROM cliente c
+            JOIN veiculo v ON c.id_cliente = v.id_cliente
+            JOIN locacao l ON v.placa = l.id_veiculo
+            GROUP BY c.id_cliente
+            ORDER BY total_locacoes DESC
+            LIMIT 10;
+        """
+
+        try:
+            cursor.execute(query)
+            resultado = cursor.fetchall()
+            conn.commit()
+
+            return resultado
+        except sqlite3.Error as e:
+            print(f"Erro ao realizar consulta ao banco de dados: {e}")
+        finally:
+            conn.close()
+
+
+    # //// RELATÓRIOS FINANCEIROS ////
     def faturamento_total(self, data_inicio: datetime, data_fim: datetime):
         conn = conectar()
         cursor = conn.cursor()

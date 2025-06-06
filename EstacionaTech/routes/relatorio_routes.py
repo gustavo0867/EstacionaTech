@@ -51,6 +51,10 @@ def gerar_relatorios():
             buffer = controller.obter_relatorio_operacional(data_inicio_str, data_fim_str)
             return send_file(buffer, as_attachment=True, download_name="relatorio_op_geral.pdf", mimetype='application/pdf')
 
+        if tipo_relatorio == "operacional_clientes":
+            buffer = controller.obter_relatorio_operacional_clientes()
+            return send_file(buffer, as_attachment=True, download_name="relatorio_op_clientes.pdf", mimetype='application/pdf')
+
         if tipo_relatorio == "financeiro_geral":
             buffer = controller.obter_relatorio_financeiro(data_inicio_str, data_fim_str)
             return send_file(buffer, as_attachment=True, download_name="relatorio_fin_geral.pdf", mimetype='application/pdf')
