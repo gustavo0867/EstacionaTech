@@ -58,16 +58,10 @@ class Relatorio:
         conn = conectar()
         cursor = conn.cursor()
 
-        # ==============================================================================
-        # CONFIGURAÇÃO DO FILTRO: Defina aqui o limite máximo de horas que uma
-        # permanência "normal" pode ter. Valores acima disso serão ignorados.
-        # 24 horas é um bom começo. Se necessário, ajuste para 48 ou outro valor.
         LIMITE_MAX_HORAS = 24
-        # ==============================================================================
         
         limite_em_segundos = LIMITE_MAX_HORAS * 3600
 
-        # A query agora tem uma condição a mais para filtrar durações muito longas
         query = f"""
             SELECT AVG(strftime('%s', data_hora_saida) - strftime('%s', data_hora_entrada)) AS tempo_medio_segundos
             FROM locacao
@@ -115,20 +109,6 @@ class Relatorio:
             conn.close()
 
 
-
-    # def tempo_medio_permanencia(self, data_inicio: datetime, data_fim: datetime):
-    #     query = """
-    #         SELECT AVG(strftime('%s', saida.data_saida) - strftime('%s', entrada.data_entrada)) AS tempo_medio
-    #         FROM entrada
-    #         JOIN saida ON entrada.id = saida.entrada_id
-    #         WHERE saida.data_saida >= ? AND saida.data_saida <= ?
-    #     """
-    #     conn = self._conectar()
-    #     cursor = conn.cursor()
-    #     cursor.execute(query, (data_inicio, data_fim))
-    #     resultado = cursor.fetchone()
-    #     conn.close()
-    #     return resultado[0] if resultado else None
 
     def calcular_procura_por_horario(self, data_inicio: datetime, data_fim: datetime):
         conn = conectar()
@@ -263,77 +243,81 @@ class Relatorio:
             conn.close()
 
 
-    # //// RELATÓRIOS FINANCEIROS ////
     def faturamento_total(self, data_inicio: datetime, data_fim: datetime):
         conn = conectar()
         cursor = conn.cursor()
 
+        # ==============================================================================
+        # CONFIGURAÇÃO DO FILTRO: Defina aqui o intervalo de valores "realistas"
+        # para um único pagamento. Valores fora deste intervalo serão ignorados.
+        LIMITE_MIN_PAGAMENTO = 0.01  # Ignora pagamentos zerados ou negativos
+        LIMITE_MAX_PAGAMENTO = 1000.00 # Ignora pagamentos muito altos (provavelmente testes)
+        # ==============================================================================
+
         query = """
             SELECT SUM(pagamento.valor) AS faturamento
             FROM pagamento
-            WHERE pagamento.data_pagamento >= ? AND pagamento.data_pagamento <= ?
+            WHERE 
+                pagamento.data_pagamento BETWEEN ? AND ?
+                AND pagamento.valor > ? AND pagamento.valor < ?
         """
 
         try:
-            cursor.execute(query, (data_inicio, data_fim))
+            data_fim_ajustada = data_fim.replace(hour=23, minute=59, second=59)
+            
+            cursor.execute(query, (data_inicio, data_fim_ajustada, LIMITE_MIN_PAGAMENTO, LIMITE_MAX_PAGAMENTO))
             resultado = cursor.fetchone()
             conn.commit()
 
-            return resultado[0] if resultado else 0
+            return resultado[0] if resultado and resultado[0] is not None else 0
         except sqlite3.Error as e:
             print(f"Erro ao realizar consulta ao banco de dados: {e}")
+            return 0
         finally:
             conn.close()
 
     def faturamento_por_dia(self, data_inicio: datetime, data_fim: datetime):
-        #Faturamento por dia
+        # Faturamento por dia, também com filtro de bom senso
         conn = conectar()
         cursor = conn.cursor()
+
+        # Usamos os mesmos limites para consistência
+        LIMITE_MIN_PAGAMENTO = 0.01
+        LIMITE_MAX_PAGAMENTO = 1000.00
 
         query = """
             SELECT DATE(locacao.data_hora_saida) AS dia, SUM(pagamento.valor) AS total
             FROM locacao
             JOIN pagamento 
             ON locacao.id_locacao = pagamento.id_locacao
-            WHERE locacao.data_hora_saida >= ? AND locacao.data_hora_saida <= ?
+            WHERE 
+                locacao.data_hora_saida BETWEEN ? AND ?
+                AND pagamento.valor > ? AND pagamento.valor < ?
             GROUP BY dia
             ORDER BY dia
-            """
+        """
 
         try:
-            cursor.execute(query, (data_inicio, data_fim))
+            data_fim_ajustada = data_fim.replace(hour=23, minute=59, second=59)
+
+            cursor.execute(query, (data_inicio, data_fim_ajustada, LIMITE_MIN_PAGAMENTO, LIMITE_MAX_PAGAMENTO))
             resultados = cursor.fetchall()
             conn.commit()
 
             return resultados
         except sqlite3.Error as e:
             print(f"Erro ao realizar consulta ao banco de dados: {e}")
+            return [] # Retorna lista vazia em caso de erro
         finally:
             conn.close()
 
-        # #Média Diária de Faturamento
-        # faturamento_total = self.calc_faturamento_total(data_inicio, data_fim)
-        # dias = (data_fim - data_inicio).days or 1  # Evita divisão por zero
-        #
-        # return resultados, round(faturamento_total / dias, 2) if faturamento_total else 0
-
 
     def media_diaria_faturamento(self, data_inicio: datetime, data_fim: datetime):
-        faturamento_total = self.faturamento_total(data_inicio, data_fim)
+        # Esta função não precisa de alteração, pois já usa a faturamento_total() corrigida.
+        faturamento_total_filtrado = self.faturamento_total(data_inicio, data_fim)
         dias = (data_fim - data_inicio).days or 1  # Evita divisão por zero
-        return round(faturamento_total / dias, 2) if faturamento_total else 0
-
-    # def faturamento_por_dia(self, data_inicio: datetime, data_fim: datetime):
-    #     query = """
-    #         SELECT DATE(saida.data_saida) AS dia, SUM(saida.valor_pago) AS total
-    #         FROM saida
-    #         WHERE saida.data_saida >= ? AND saida.data_saida <= ?
-    #         GROUP BY dia
-    #         ORDER BY dia
-    #     """
-    #     conn = self._conectar()
-    #     cursor = conn.cursor()
-    #     cursor.execute(query, (data_inicio, data_fim))
-    #     resultados = cursor.fetchall()
-    #     conn.close()
-    #     return resultados
+        
+        if faturamento_total_filtrado > 0:
+            return round(faturamento_total_filtrado / dias, 2) 
+        else:
+            return 0
