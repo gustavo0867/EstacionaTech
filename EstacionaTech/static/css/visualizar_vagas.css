@@ -128,6 +128,23 @@
     grid-column: 1 / -1;
 }
 
+.painel-wrapper {
+    display: flex; 
+    gap: 24px; 
+    align-items: flex-start; 
+}
+
+.painel-esquerdo {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 24px; 
+}
+
+.painel-direito {
+    flex: 2.5; 
+}
+
 @media (min-width: 992px) {
     .dashboard-grid {
         grid-template-columns: 1fr 1fr;

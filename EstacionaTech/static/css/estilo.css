@@ -329,6 +329,30 @@ body {
     font-size: 1.05rem;
 }
 
+.locacoes-table .cell-actions {
+    text-align: left;
+    vertical-align: middle; 
+}
+
+
+.locacoes-table .btn-exit {
+    display: inline-block; 
+    width: auto;           
+    padding: 8px 16px;     
+    background-color: #d9534f; 
+    color: white;              
+    text-decoration: none;     
+    border-radius: 5px;        
+    border: none;              
+    cursor: pointer;           
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.locacoes-table .btn-exit:hover {
+    background-color: #c9302c; 
+}
+
 @media (max-width: 992px) {
     .cards-container {
         grid-template-columns: repeat(2, 1fr);

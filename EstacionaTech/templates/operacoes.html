@@ -62,7 +62,7 @@
                             </div>
                         </div>
                         <div class="btn-group">
-                            <button type="submit" class="btn-entry">Registrar Entrada</button>
+                            <button type="submit" class="btn btn-primary">Registrar Entrada</button>
                         </div>
                     </form>
                 </section>
@@ -73,7 +73,7 @@
                         <h3>Veículos Estacionados</h3>
                         <form action="{{ url_for('locacao.buscar_veiculo') }}" method="post" class="search-box">
                             <input type="text" name="placa_busca" placeholder="Buscar por placa..." value="{{ termo_busca if termo_busca else '' }}">
-                            <button type="submit">Buscar</button>
+                            <button type="submit" class= "btn btn-primary">Buscar</button>
                         </form>
                     </div>
 
@@ -96,12 +96,12 @@
                                 <td>{{ locacao[4] }} ({{ locacao[5] }})</td>
                                 <td>
                                     {% if locacao[3].__class__.__name__ == 'datetime' %}
-                                        {{ locacao[3].strftime('%d/%m/%Y %H:%M') }}
+                                        {{ locacao[3].strftime('%d/%m/%y %H:%M') }}
                                     {% else %}
                                         {{ locacao[3] }}
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="cell-actions">
                                     <a href="{{ url_for('locacao.registrar_saida', id_locacao=locacao[0]) }}" class="btn-exit">Registrar Saída</a>
                                 </td>
                             </tr>
@@ -138,16 +138,16 @@
                                 <td>{{ locacao[2] }}</td>
                                 <td>{{ locacao[5] }} ({{ locacao[6] }})</td>
                                 <td>
-                                  {% if locacao[3] is mapping or locacao[3].__class__.__name__ == 'datetime' %}
-                                    {{ locacao[3].strftime('%d/%m/%Y %H:%M') }}
-                                  {% else %}
-                                    {{ locacao[3] }}
-                                  {% endif %}
+                                    {% if locacao[3].__class__.__name__ == 'datetime' %}
+                                        {{ locacao[3].strftime('%d/%m/%y %H:%M') }}
+                                    {% else %}
+                                        {{ locacao[3] }}
+                                    {% endif %}
                                 </td>
                                 <td>
                                 {% if locacao[4] %}
                                     {% if locacao[4].__class__.__name__ == 'datetime' %}
-                                        {{ locacao[4].strftime('%d/%m/%Y %H:%M') }}
+                                        {{ locacao[4].strftime('%d/%m/%y %H:%M') }}
                                     {% else %}
                                         {{ locacao[4] }}
                                     {% endif %}
