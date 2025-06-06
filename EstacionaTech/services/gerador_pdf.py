@@ -56,7 +56,9 @@ def relatorio_locacoes(locacoes: list, data_inicio, data_fim):
     ]))
 
     elementos.append(tabela)
-    doc.build(elementos)
+    #doc.build(elementos)
+    doc.build(elementos, onFirstPage=rodape, onLaterPages=rodape)
+
 
     buffer.seek(0)
     return buffer
@@ -135,7 +137,7 @@ def relatorio_operacional_geral(vagas, tempo_medio, maior_movimento, menor_movim
 
 
 
-    doc.build(elementos)
+    doc.build(elementos, onFirstPage=rodape, onLaterPages=rodape)
 
     buffer.seek(0)
     return buffer
@@ -258,7 +260,7 @@ def relatorio_operacional_clientes(mensalistas, clientes_mais_veiculos, clientes
 
     elementos.append(tabela_clientes_frequentes)
 
-    doc.build(elementos)
+    doc.build(elementos, onFirstPage=rodape, onLaterPages=rodape)
 
     buffer.seek(0)
     return buffer
@@ -309,7 +311,7 @@ def relatorio_financeiro(faturamento_total, faturamento_por_dia, media_diaria, d
     info_media_diaria = Paragraph(f"R$: {str(media_diaria)}")
     elementos.append(info_media_diaria)
 
-    doc.build(elementos)
+    doc.build(elementos, onFirstPage=rodape, onLaterPages=rodape)
 
     buffer.seek(0)
     return buffer
@@ -331,3 +333,9 @@ def adicionar_subtitulo(elementos, data_inicio, data_fim):
     subtitulo = Paragraph(f"Intervalo observado: {data_inicio} a {data_fim}", styles['Heading3'])
     elementos.append(subtitulo)
     elementos.append(Spacer(1, 0.5 * cm))
+
+def rodape(canvas: canvas, doc):
+    canvas.saveState()
+    canvas.setFont('Helvetica-Oblique', 10)
+    canvas.drawCentredString(A4[0] / 2, 15, "Relatório Emitido Via EstacionaTech")
+    canvas.restoreState()
