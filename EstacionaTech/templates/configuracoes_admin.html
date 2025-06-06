@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurações - EstacionaTech</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
-<<<<<<< Updated upstream
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/configuracoes.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-=======
     <link rel="stylesheet" href="{{ url_for('static', filename='css/configuracoes_admin.css') }}">
->>>>>>> Stashed changes
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 <body>
 <div class="dashboard ">
@@ -41,7 +37,7 @@
             <div class="uniform-card card-config">
                 <div class="card-icon">🅿️</div>
                 <h3>Vagas</h3>
-                <p>Gerencie a disponibilidade das vagas.</p>
+                <p>Gerencie as vagas disponíveis.</p>
                 <a href="{{ url_for('vaga.config_vagas') }}" class="btn btn-primary">Acessar</a>
             </div>
             <div class="uniform-card card-config">

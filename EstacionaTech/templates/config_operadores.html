@@ -93,7 +93,7 @@
                             <td>{{ operador[2] }}</td>
                             <td>{{ operador[3] }}</td>
                             <td>{{ operador[1] }}</td>
-                            <td>{{ operador[6] }}</td>
+                            <td>{{ operador[6].strftime('%d/%m/%y %H:%M') }}</td>
                             <td class="acoes">
                                 <button class="btn btn-secundario" onclick="openEditModal('{{ operador[0] }}', '{{ operador[2] }}', '{{ operador[3] }}', '{{ operador[1] }}')">Editar</button>
                                 <form action="{{ url_for('operadores.remover_operador', id_operador=operador[0]) }}" method="POST" class="inline-form" onsubmit="return confirm('Tem certeza que deseja remover este operador?');">

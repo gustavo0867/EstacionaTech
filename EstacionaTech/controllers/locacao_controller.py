@@ -1,6 +1,7 @@
 from EstacionaTech.models.veiculo import Veiculo
 from EstacionaTech.models.vaga import Vaga
 from EstacionaTech.models.locacao import Locacao
+from datetime import datetime
 
 class LocacaoController:
     @staticmethod
@@ -64,12 +65,49 @@ class LocacaoController:
     @staticmethod
     def listar_ativas():
         """Lista todas as locações ativas (veículos estacionados)"""
-        return Locacao.listar_ativas()
+
+        locacoes = Locacao.listar_ativas()
+
+        locacoes_processadas = []
+
+        for locacao_tupla in locacoes:
+            locacao_lista = list(locacao_tupla)  
+
+            if isinstance(locacao_lista[3], str):
+                try:
+                    locacao_lista[3] = datetime.strptime(locacao_lista[3].split('.')[0], '%Y-%m-%d %H:%M:%S')
+                except ValueError:
+                    print(f"Erro ao converter data: {locacao_lista[3]}") 
+
+            locacoes_processadas.append(tuple(locacao_lista)) 
+
+        return locacoes_processadas
 
     @staticmethod
     def listar_recentes(limit=10):
         """Lista as locações mais recentes"""
-        return Locacao.listar_recentes(limit)
+        historico = Locacao.listar_recentes(limit)
+        
+        historico_processado = []
+
+        for locacao_tupla in historico:
+            locacao_lista = list(locacao_tupla)
+
+            if isinstance(locacao_lista[3], str):
+                try:
+                    locacao_lista[3] = datetime.strptime(locacao_lista[3].split('.')[0], '%Y-%m-%d %H:%M:%S')
+                except ValueError:
+                    print(f"Erro ao converter data de entrada: {locacao_lista[3]}")
+
+            if len(locacao_lista) > 4 and locacao_lista[4] and isinstance(locacao_lista[4], str):
+                try:
+                    locacao_lista[4] = datetime.strptime(locacao_lista[4].split('.')[0], '%Y-%m-%d %H:%M:%S')
+                except ValueError:
+                     print(f"Erro ao converter data de saída: {locacao_lista[4]}")
+            
+            historico_processado.append(tuple(locacao_lista)) 
+
+        return historico_processado
 
     @staticmethod
     def buscar_por_placa(placa):
