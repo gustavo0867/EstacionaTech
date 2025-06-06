@@ -1,74 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
-
-:root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --secondary: #A9A9A9;
-  --danger: #ef4444;
-  --success: #22c55e;
-  --background: #f8fafc;
-  --surface: #ffffff;
-  --text: #0f172a;
-  --text-light: #64748b;
-}
-
-body {
-  background-color: var(--background);
-  color: var(--text);
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Dashboard Header */
-.dashboard-header {
-  background: var(--surface);
-  padding: 1rem 0;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-  margin-bottom: 2rem;
-  width: 100%;
-}
-
-.dashboard-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  height: 100%;
-}
-
-.dashboard-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.dashboard-user {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.dashboard-user span {
-  font-weight: 500;
-}
-
-/* Relatórios Content */
 .content-area {
   padding: 0 2rem 2rem;
 }
@@ -88,20 +19,6 @@ body {
   margin-bottom: 1.5rem;
   color: var(--text-light);
   font-weight: 500;
-}
-
-h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: var(--text);
-}
-
-h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
-  color: var(--text);
 }
 
 .data-range {
@@ -146,35 +63,14 @@ input[type="date"]:focus {
   border-top: 1px solid #e2e8f0;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-  background-color: var(--primary);
-  color: white;
+.form-container h1 {
+  margin-bottom: 1rem; 
 }
 
-.btn:hover {
-  background-color: var(--primary-dark);
+.section h2 {
+  margin-bottom: 1rem; 
 }
 
-.btn-primary {
-  background-color: var(--primary);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
-}
 
 @media (max-width: 768px) {
   .dashboard-nav {

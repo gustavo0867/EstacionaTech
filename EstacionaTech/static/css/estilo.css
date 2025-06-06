@@ -93,12 +93,18 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  background-color: var(--primary);
+  color: white;;
   font-size: 1rem;
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
+  text-decoration: none;
 }
 
 .btn-primary {
@@ -143,6 +149,7 @@ body {
   background: var(--surface);
   padding: 1rem;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  margin-bottom: 2rem;;
 }
 
 .dashboard-header-content {
@@ -351,6 +358,70 @@ body {
 
 .locacoes-table .btn-exit:hover {
     background-color: #c9302c; 
+}
+
+.login-body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+}
+
+.input-with-icon .form-input {
+    padding-left: 40px;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.password-toggle-icon:hover {
+    color: var(--primary);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.forgot-password-link {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+.alert {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
 }
 
 @media (max-width: 992px) {

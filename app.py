@@ -2,6 +2,7 @@ from flask import Flask
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from EstacionaTech.database.database import verificar_login
 from werkzeug.security import generate_password_hash
+from datetime import timedelta
 
 
 # Importando os Blueprints
@@ -20,7 +21,12 @@ app = Flask(__name__, static_folder='EstacionaTech/static', template_folder='Est
 app.secret_key = 'chave_secreta_super_segura'
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 app.jinja_env.auto_reload = True
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 # Definindo rota principal
 @app.route('/')
