@@ -52,27 +52,69 @@ class Relatorio:
             conn.close()
 
     def calcular_tempo_medio_permanencia(self, data_inicio: datetime, data_fim: datetime):
+        """
+        Calcula o tempo médio de permanência, ignorando durações irrealistas (outliers).
+        """
         conn = conectar()
         cursor = conn.cursor()
 
-        #Calcula o tempo médio de permanência no estacionamento
-        query = """
-            SELECT AVG(strftime('%s', locacao.data_hora_saida) - strftime('%s', locacao.data_hora_entrada)) AS tempo_medio
+        # ==============================================================================
+        # CONFIGURAÇÃO DO FILTRO: Defina aqui o limite máximo de horas que uma
+        # permanência "normal" pode ter. Valores acima disso serão ignorados.
+        # 24 horas é um bom começo. Se necessário, ajuste para 48 ou outro valor.
+        LIMITE_MAX_HORAS = 24
+        # ==============================================================================
+        
+        limite_em_segundos = LIMITE_MAX_HORAS * 3600
+
+        # A query agora tem uma condição a mais para filtrar durações muito longas
+        query = f"""
+            SELECT AVG(strftime('%s', data_hora_saida) - strftime('%s', data_hora_entrada)) AS tempo_medio_segundos
             FROM locacao
-            WHERE locacao.data_hora_saida >= ? AND locacao.data_hora_saida <= ?
-            """
-            #JOIN saida ON entrada.id = saida.entrada_id
+            WHERE 
+                data_hora_saida IS NOT NULL 
+                AND data_hora_saida BETWEEN ? AND ?
+                AND (strftime('%s', data_hora_saida) - strftime('%s', data_hora_entrada)) < ?
+        """
         try:
-            cursor.execute(query, (data_inicio, data_fim))
-            tempo_medio = cursor.fetchone()
+            data_fim_ajustada = data_fim.replace(hour=23, minute=59, second=59)
+
+            # O novo parâmetro (limite_em_segundos) é adicionado à execução
+            cursor.execute(query, (data_inicio, data_fim_ajustada, limite_em_segundos))
+            resultado = cursor.fetchone()
             conn.commit()
 
-            return tempo_medio[0] if tempo_medio else None
+            segundos_medios = resultado[0] if resultado and resultado[0] is not None else 0
+
+            if segundos_medios > 0:
+                segundos_medios = round(segundos_medios)
+                td = timedelta(seconds=segundos_medios)
+                
+                horas, remanescente = divmod(td.seconds, 3600)
+                minutos, segundos = divmod(remanescente, 60)
+                
+                partes = []
+                if td.days > 0:
+                    partes.append(f"{td.days} dia{'s' if td.days > 1 else ''}")
+                if horas > 0:
+                    partes.append(f"{horas} hora{'s' if horas > 1 else ''}")
+                if minutos > 0:
+                    partes.append(f"{minutos} minuto{'s' if minutos > 1 else ''}")
+                # Apenas mostra segundos se for a única unidade de tempo relevante
+                if segundos > 0 and not partes:
+                     partes.append(f"{segundos} segundo{'s' if segundos > 1 else ''}")
+
+                return ", ".join(partes) if partes else "Menos de um minuto"
+            else:
+                return "Nenhuma permanência válida encontrada no período."
+
         except sqlite3.Error as e:
             print(f"Erro ao realizar consulta ao banco de dados: {e}")
-            return False
+            return "Erro ao calcular dados"
         finally:
             conn.close()
+
+
 
     # def tempo_medio_permanencia(self, data_inicio: datetime, data_fim: datetime):
     #     query = """
