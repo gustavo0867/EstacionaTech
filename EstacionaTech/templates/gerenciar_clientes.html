@@ -44,7 +44,7 @@
                     <input type="text" id="searchInput" placeholder="Buscar cliente..." onkeyup="filtrarClientes()">
                 </div>
                 <button class="btn btn-primary" onclick="abrirModalCliente()">
-                    <i class="fas fa-plus"></i> Novo Cliente
+                    Adicionar Cliente
                 </button>
             </div>
 
@@ -75,7 +75,7 @@
                             </div>
                             <div class="actions">
                                 <button class="btn btn-primary" onclick="editarCliente({{ cliente.id_cliente }}, '{{ cliente.cpf }}', '{{ cliente.nome }}', '{{ cliente.telefone }}', '{{ cliente.email }}', {{ cliente.mensalista }}, '{{ cliente.modalidade }}'); event.stopPropagation();">
-                                    <i class="fas fa-edit"></i> Editar
+                                    Editar
                                 </button>
                                 {% if cliente.qtd_veiculos == 0 %}
                                 <a href="{{ url_for('cliente.excluir_cliente', id_cliente=cliente.id_cliente) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir este cliente?'); event.stopPropagation();">
@@ -92,7 +92,7 @@
                                 <div class="section-header">
                                     <h3>Veículos</h3>
                                     <button class="btn btn-primary" onclick="abrirModalVeiculo({{ cliente.id_cliente }}, '{{ cliente.nome }}')">
-                                        <i class="fas fa-plus"></i> Adicionar Veículo
+                                        Adicionar Veículo
                                     </button>
                                 </div>
 

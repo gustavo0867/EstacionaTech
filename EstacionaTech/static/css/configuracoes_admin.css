@@ -1,0 +1,20 @@
+/* static/css/configuracoes_admin.css */
+.config-cards-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+    gap: 20px; /* Espaçamento entre os cards */
+    justify-content: center; /* Alinha os cards ao início */
+}
+
+.uniform-card.card-config {
+    flex-basis: calc(23% - 10px); /* Define a largura base para 2 cards por linha, considerando o gap */
+    box-sizing: border-box; /* Garante que padding e border não aumentem a largura total */
+    margin-bottom: 20px; /* Adiciona uma margem inferior caso os cards tenham alturas diferentes e o gap não seja suficiente visualmente na quebra de linha */
+}
+
+/* Ajustes para telas menores, se necessário (opcional) */
+@media (max-width: 768px) {
+    .uniform-card.card-config {
+        flex-basis: 100%; /* Em telas menores, volta para 1 card por linha */
+    }
+}
