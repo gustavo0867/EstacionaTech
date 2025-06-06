@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios - EstacionaTech</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/relatorio.css') }}">
 </head>
 <body>
     <header class="dashboard-header">
-        <nav class="dashboard-nav">
+        <nav class="dashboard-nav container">
             <h1 class="dashboard-title">EstacionaTech</h1>
             <div class="dashboard-user">
                 <span>{{ nome }}</span>
@@ -37,20 +38,20 @@
 
                 <div class="section">
                     <h2>Relatórios Operacionais</h2>
-                    <button class="btn" type="submit" name="tipo_relatorio" value="operacional_locacoes">
+                    <button class="btn btn-primary" type="submit" name="tipo_relatorio" value="operacional_locacoes">
                         Relatório de Locações
                     </button>
-                    <button class="btn" type="submit" name="tipo_relatorio" value="operacional_geral">
+                    <button class="btn btn-primary" type="submit" name="tipo_relatorio" value="operacional_geral">
                         Relatório Operacional Geral
                     </button>
-                    <button class="btn" type="submit" name="tipo_relatorio" value="operacional_clientes">
+                    <button class="btn btn-primary" type="submit" name="tipo_relatorio" value="operacional_clientes">
                         Relatório Operacional de Clientes
                     </button>
                 </div>
 
                 <div class="section">
                     <h2>Relatórios Financeiros</h2>
-                    <button class="btn" type="submit" name="tipo_relatorio" value="financeiro_geral">
+                    <button class="btn btn-primary" type="submit" name="tipo_relatorio" value="financeiro_geral">
                         Relatório Financeiro Geral
                     </button>
                 </div>
