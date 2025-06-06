@@ -1,6 +1,6 @@
 from EstacionaTech.models.relatorio import Relatorio
 from datetime import datetime
-from EstacionaTech.services.gerador_pdf import relatorio_locacoes, relatorio_operacional, relatorio_financeiro
+from EstacionaTech.services.gerador_pdf import relatorio_locacoes, relatorio_operacional_geral, relatorio_operacional_clientes, relatorio_financeiro
 class RelatorioController:
     def __init__(self):
         self.relatorio_model = Relatorio()
@@ -21,7 +21,14 @@ class RelatorioController:
         vagas = self.relatorio_model.listar_vagas_mais_utlizadas(data_inicio, data_fim)
         tempo_medio = self.relatorio_model.calcular_tempo_medio_permanencia(data_inicio, data_fim)
         maior_movimento, menor_movimento = self.relatorio_model.calcular_procura_por_horario(data_inicio, data_fim)
-        return relatorio_operacional(vagas, tempo_medio, maior_movimento, menor_movimento, data_inicio_str, data_fim_str)
+        return relatorio_operacional_geral(vagas, tempo_medio, maior_movimento, menor_movimento, data_inicio_str, data_fim_str)
+
+    def obter_relatorio_operacional_clientes(self):
+        mensalistas = self.relatorio_model.listar_mensalistas()
+        clientes_mais_veiculos = self.relatorio_model.listar_clientes_com_mais_veiculos()
+        clientes_frequentes = self.relatorio_model.listar_clientes_frequentes()
+
+        return relatorio_operacional_clientes(mensalistas, clientes_mais_veiculos, clientes_frequentes)
 
     def obter_relatorio_financeiro(self, data_inicio_str: str, data_fim_str: str):
         data_inicio, data_fim = self.validar_datas(data_inicio_str, data_fim_str)
