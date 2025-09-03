@@ -13,7 +13,10 @@ Este projeto foi desenvolvido em grupo na disciplina de **Desenvolvimento de Pro
 
 ## Tecnologias Utilizadas
 
-- **Python**: Linguagem de programação.
-- **Arquitetura MVC**: Para organizar o código em Model, View e Controller.
-- **Tkinter**: Biblioteca para criação da interface gráfica desktop.
+- **Python**: Linguagem de programação para o desenvolvimento do back-end.
+- **Flask**: Micro-framework utilizado para construir a aplicação web.
+- **HTML, CSS e Jinja2**: Tecnologias de front-end para a criação da interface do usuário e o uso de templates.
+- **Arquitetura MVC (Model-View-Controller)**: Padrão de design que organiza o código, separando a lógica de negócios da interface.
+- **Docker**: Ferramenta de conteinerização para simplificar a implantação e o gerenciamento da aplicação.
+- **ReportLab**: Biblioteca Python usada para a criação programática de relatórios em PDF.
 
